@@ -1,0 +1,58 @@
+version: "3.5"
+
+services:
+  app:
+    build:
+      args:
+        user: pontomanager
+        uid: 999
+      context: ./
+      dockerfile: Dockerfile
+    image: pontomanager
+    restart: unless-stopped
+    container_name: pontomanager-app
+    working_dir: /var/www/
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www
+    networks:
+      - server
+      - database
+  nginx:
+    image: nginx:1.19-alpine
+    container_name: pontomanager-nginx
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./:/var/www
+    networks:
+      - server
+  db:
+    image: mysql:5.7
+    container_name: pontomanager-db
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    volumes:
+      - pontomanager-db:/var/lib/mysql
+    networks:
+      - database
+
+volumes:
+  pontomanager-db:
+
+networks:
+  server:
+    driver: bridge
+  database:
+    driver: bridge
