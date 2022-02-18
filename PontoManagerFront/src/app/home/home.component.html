@@ -30,114 +30,115 @@
                       [aria-label]="checkboxLabel(row)">
         </mat-checkbox>
       </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
 
-    <!-- Position Column -->
     <ng-container matColumnDef="id_vsts">
       <th mat-header-cell *matHeaderCellDef> Id Vsts. </th>
-      <td mat-cell *matCellDef="let element" (dblclick)="showInputIdVsts(element)">
-        <span *ngIf="!element.isItInEdit.id_vsts">{{element.id_vsts}}</span>
+      <td mat-cell *matCellDef="let element" (dblclick)="showInput(element.id_vsts)">
+        <span *ngIf="!element.id_vsts.editable">{{element.id_vsts.value}}</span>
 
-        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.id_vsts">
+        <mat-form-field appearance="fill" *ngIf="element.id_vsts.editable">
           <mat-label>Usuário</mat-label>
-          <input matInput [(ngModel)]="element.id_vsts">
-          <button mat-icon-button matSuffix color="primary" aria-label="">
+          <input type="number" matInput [(ngModel)]="element.id_vsts.value">
+          <button mat-icon-button matSuffix color="primary" aria-label="" (click)="saveInput(element.id_vsts, element)">
             <mat-icon>check</mat-icon>
           </button>
-          <button mat-icon-button matSuffix (click)="hideInputIdVsts(element)" color="warn" aria-label="">
+          <button mat-icon-button matSuffix (click)="cancelInput(element.id_vsts)" color="warn" aria-label="">
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
       </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
-    <!-- Symbol Column -->
     <ng-container matColumnDef="id_task">
       <th mat-header-cell *matHeaderCellDef> Id Task </th>
-      <td mat-cell *matCellDef="let element" (dblclick)="showInputIdTask(element)">
-        <span *ngIf="!element.isItInEdit.id_task">{{element.id_task}}</span>
-        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.id_task">
+      <td mat-cell *matCellDef="let element" (dblclick)="showInput(element.id_task)">
+        <span *ngIf="!element.id_task.editable">{{element.id_task.value}}</span>
+        <mat-form-field appearance="fill" *ngIf="element.id_task.editable">
           <mat-label>Usuário</mat-label>
-          <input matInput [(ngModel)]="element.id_task">
-          <button mat-icon-button matSuffix color="primary" aria-label="">
+          <input matInput [(ngModel)]="element.id_task.value">
+          <button mat-icon-button matSuffix color="primary" aria-label="" (click)="saveInput(element.id_task, element)">
             <mat-icon>check</mat-icon>
           </button>
-          <button mat-icon-button matSuffix (click)="hideInputIdTask(element)" color="warn" aria-label="">
+          <button mat-icon-button matSuffix (click)="cancelInput(element.id_task)" color="warn" aria-label="">
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
       </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
-    <!-- Name Column -->
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef> Data </th>
-      <td mat-cell *matCellDef="let element" (dblclick)="showInputDate(element)">
-        <span *ngIf="!element.isItInEdit.date">
-          {{dateService.formatDate(element.date)}}
+      <td mat-cell *matCellDef="let element" (dblclick)="showInput(element.date)">
+        <span *ngIf="!element.date.editable">
+          {{dateService.formatDate(element.date.value)}}
         </span>
-        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.date">
-          <input matInput [matDatepicker]="data" [(ngModel)]="element.date">
+        <mat-form-field appearance="fill" *ngIf="element.date.editable">
+          <input matInput [matDatepicker]="data" [(ngModel)]="element.date.value">
           <mat-datepicker-toggle matSuffix [for]="data"></mat-datepicker-toggle>
-          <button mat-icon-button matSuffix color="primary" aria-label="">
+          <button mat-icon-button matSuffix color="primary" aria-label="" (click)="saveInput(element.date, element)">
             <mat-icon>check</mat-icon>
           </button>
-          <button mat-icon-button matSuffix (click)="hideInputDate(element)" color="warn" aria-label="">
+          <button mat-icon-button matSuffix (click)="cancelInput(element.date)" color="warn" aria-label="">
             <mat-icon>close</mat-icon>
           </button>
           <mat-datepicker #data></mat-datepicker>
         </mat-form-field>
       </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
-    <!-- Name Column -->
     <ng-container matColumnDef="start_at">
       <th mat-header-cell *matHeaderCellDef> Inicio </th>
-      <td mat-cell *matCellDef="let element" (dblclick)="showInputStartAt(element)">
-        <span *ngIf="!element.isItInEdit.start_at">{{dateService.formatTime(element.start_at)}}</span>
-        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.start_at">
-          <input [ngxTimepicker]="picker" [(ngModel)]="element.start_at" [format]="24" matInput>
+      <td mat-cell *matCellDef="let element" (dblclick)="showInput(element.start_at)">
+        <span *ngIf="!element.start_at.editable">{{dateService.formatTime(element.start_at.value)}}</span>
+        <mat-form-field appearance="fill" *ngIf="element.start_at.editable">
+          <input [ngxTimepicker]="picker" [(ngModel)]="element.start_at.string" [format]="24" matInput>
           <ngx-material-timepicker #picker ></ngx-material-timepicker>
-          <button mat-icon-button matSuffix color="primary" aria-label="">
+          <button mat-icon-button matSuffix color="primary" aria-label="" (click)="saveInput(element.start_at, element)">
             <mat-icon>check</mat-icon>
           </button>
-          <button mat-icon-button matSuffix (click)="hideInputStartAt(element)" color="warn" aria-label="">
+          <button mat-icon-button matSuffix (click)="cancelInput(element.start_at)" color="warn" aria-label="">
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
       </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
-    <!-- Weight Column -->
     <ng-container matColumnDef="end_at">
       <th mat-header-cell *matHeaderCellDef> Fim </th>
-      <td mat-cell *matCellDef="let element" (dblclick)="showInputEndAt(element)">
-        <span *ngIf="!element.isItInEdit.end_at">{{element.end_at_string}}</span>
-        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.end_at">
-          <input [ngxTimepicker]="picker" [(ngModel)]="element.end_at_string" (change)="changeEndAt(element)" [format]="24" matInput>
+      <td mat-cell *matCellDef="let element" (dblclick)="showInput(element.end_at)">
+        <span *ngIf="!element.end_at.editable">{{element.end_at.string}}</span>
+        <mat-form-field appearance="fill" *ngIf="element.end_at.editable">
+          <input [ngxTimepicker]="picker" [(ngModel)]="element.end_at.string" [format]="24" matInput>
           <ngx-material-timepicker #picker ></ngx-material-timepicker>
-          <button mat-icon-button matSuffix color="primary" aria-label="">
+          <button mat-icon-button matSuffix color="primary" aria-label="" (click)="saveInput(element.end_at, element)">
             <mat-icon>check</mat-icon>
           </button>
-          <button mat-icon-button matSuffix (click)="hideInputEndAt(element)" color="warn" aria-label="">
+          <button mat-icon-button matSuffix (click)="cancelInput(element.end_at)" color="warn" aria-label="">
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
       </td>
+      <td mat-footer-cell *matFooterCellDef>Total</td>
     </ng-container>
 
     <!-- Symbol Column -->
     <ng-container matColumnDef="interval">
       <th mat-header-cell *matHeaderCellDef> Intervalo </th>
       <td mat-cell *matCellDef="let element"> {{dateService.formatTime(element.interval)}} </td>
+      <td mat-footer-cell *matFooterCellDef> {{ calcTotalInterval() }} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row
-        *matRowDef="let row; columns: displayedColumns;"
-    ></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
 
   </table>
 </div>

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import {DatePipe} from "@angular/common";
 
 const DATE_DEFAULT = 'dd/MM/yyyy';
-const TIME_DEFAULT = 'hh:mm';
-const DATE_TIME_DEFAULT = 'dd/MM/yyyy hh:mm';
+const TIME_DEFAULT = 'HH:mm';
+const DATE_TIME_DEFAULT = 'dd/MM/yyyy HH:mm';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ export class DateService {
 
   constructor(public datepipe: DatePipe) { }
 
-  private formatDateToString(date: Date, format: string){
-    return this.datepipe.transform(date, format);
+  private formatDateToString(date: Date, format: string): string {
+    return this.datepipe.transform(date, format) ?? '';
   }
 
   formatDate(date: Date){
