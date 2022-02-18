@@ -2,50 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import { DateService } from '../services/date.service';
 import {MatTable} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
-
-export interface NoteTime {
-  id: number,
-  id_vsts: {
-    value: number,
-    editable: boolean
-  },
-  id_task: {
-    value: number,
-    editable: boolean
-  },
-  date: {
-    value: Date,
-    editable: boolean
-  },
-  start_at: {
-    value: Date,
-    editable: boolean,
-    string: string
-  },
-  end_at: {
-    value: Date,
-    editable: boolean,
-    string: string
-  },
-  interval: Date,
-  isItInEdit: NoteTimeTableEdit
-}
-
-export interface EditableField {
-  value: any,
-  editable: boolean
-}
-
-export interface NoteTimeTableEdit {
-  id_vsts: {
-    editable: boolean
-  },
-  date: boolean,
-  start_at: boolean,
-  end_at: boolean,
-  interval: boolean,
-  id_task: boolean,
-}
+import {NoteTime} from "./models/NoteTime";
+import {NoteTimeFactory} from "./models/NoteTimeFactory";
 
 @Component({
   selector: 'app-home',
@@ -60,54 +18,10 @@ export class HomeComponent implements OnInit {
 
   @ViewChild(MatTable) table!: MatTable<NoteTime>;
 
-  constructor(public dateService: DateService) { }
+  constructor(public dateService: DateService, private noteTimeFactory: NoteTimeFactory) {
+  }
 
   ngOnInit(): void {
-  }
-
-  newTableEdit(): NoteTimeTableEdit{
-    return {
-      id_vsts: {
-        editable: false
-      },
-      date: false,
-      start_at: false,
-      end_at: false,
-      interval: false,
-      id_task: false,
-    };
-  }
-
-  newNoteTime(): NoteTime {
-    let note: NoteTime =  {
-      id: this.dataSource.length+1,
-      id_vsts: {
-        value: 1,
-        editable: false
-      },
-      id_task: {
-        value: 1,
-        editable: false
-      },
-      date: {
-        value: new Date(),
-        editable: false
-      },
-      start_at: {
-        value: new Date(),
-        editable: false,
-        string: this.dateService.formatTime(new Date())
-      },
-      end_at: {
-        value: new Date(),
-        editable: false,
-        string: this.dateService.formatTime(new Date())
-      },
-      interval: new Date,
-      isItInEdit: this.newTableEdit()
-    };
-    note = this.calcInterval(note);
-    return note;
   }
 
   addRow(note: NoteTime){
@@ -116,7 +30,7 @@ export class HomeComponent implements OnInit {
   }
 
   newRow(){
-    this.addRow(this.newNoteTime());
+    this.addRow(this.noteTimeFactory.create(this.dataSource.length));
     this.table.renderRows();
   }
 
@@ -172,6 +86,9 @@ export class HomeComponent implements OnInit {
       if(item.start_at.editable){
         this.cancelInput(item.start_at);
       }
+      if(item.end_at.editable){
+        this.cancelInput(item.end_at);
+      }
     })
   }
 
@@ -199,32 +116,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  showInputStartAt(note: NoteTime){
-    note.isItInEdit.start_at = true;
-  }
-
-  hideInputStartAt(note: NoteTime){
-    note.isItInEdit.start_at = false;
-  }
-
-  showInputEndAt(note: NoteTime){
-    note.isItInEdit.end_at = true;
-  }
-
-  changeEndAt(note: NoteTime){
-    if(note.end_at.string !== ''){
-      note.end_at.value = this.dateService.formatStringToDateTime(note.end_at.string);
-    }
-  }
-
-  changeStartAt(note: NoteTime){
-    console.log('alo?222');
-    if(note.start_at.string !== ''){
-      console.log('alo?');
-      note.start_at.value = this.dateService.formatStringToDateTime(note.start_at.string);
-    }
-  }
-
   calcTotalInterval(){
     let totalHours = new Date();
     totalHours.setHours(0,0,0,0);
@@ -244,6 +135,5 @@ export class HomeComponent implements OnInit {
     let result = new Date();
     result.setHours(hours,minutes);
     note.interval = result;
-    return note;
   }
 }
