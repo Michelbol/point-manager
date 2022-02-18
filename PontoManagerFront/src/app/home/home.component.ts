@@ -30,7 +30,9 @@ export class HomeComponent implements OnInit {
   }
 
   newRow(){
-    this.addRow(this.noteTimeFactory.create(this.dataSource.length));
+    let note = this.noteTimeFactory.create(this.dataSource.length);
+    this.calcInterval(note);
+    this.addRow(note);
     this.table.renderRows();
   }
 

@@ -9,5 +9,5 @@ export interface NoteTime {
   date: EditableFieldDate,
   start_at: EditableFieldTime,
   end_at: EditableFieldTime,
-  interval: Date
+  interval: Date,
 }
