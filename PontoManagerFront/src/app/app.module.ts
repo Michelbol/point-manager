@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -14,11 +14,22 @@ import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {FormsModule} from "@angular/forms";
+import { HomeComponent } from './home/home.component';
+import {MatTableModule} from "@angular/material/table";
+import { DatePipe } from '@angular/common';
+import {MatDividerModule} from "@angular/material/divider";
+import {MatPseudoCheckboxModule} from "@angular/material/core";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MAT_DATE_LOCALE } from '@angular/material/core'
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -32,9 +43,19 @@ import {FormsModule} from "@angular/forms";
     MatCardModule,
     MatInputModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    MatTableModule,
+    MatDividerModule,
+    MatPseudoCheckboxModule,
+    MatCheckboxModule,
+    NgxMaterialTimepickerModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
-  providers: [],
+  providers: [
+    DatePipe,
+    {provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

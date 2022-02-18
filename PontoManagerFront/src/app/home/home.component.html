@@ -1,0 +1,143 @@
+<div>
+  <button
+    class="btn-add-row"
+    mat-mini-fab
+    color="primary"
+    aria-label="Example icon button with a menu icon"
+    (click)="newRow()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <button
+    class="btn-remove-row"
+    mat-raised-button
+    (click)="removeSelectRows()"
+  >Remover {{ selection.selected.length }} selecionada(s) </button>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                      [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)"
+                      [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="id_vsts">
+      <th mat-header-cell *matHeaderCellDef> Id Vsts. </th>
+      <td mat-cell *matCellDef="let element" (dblclick)="showInputIdVsts(element)">
+        <span *ngIf="!element.isItInEdit.id_vsts">{{element.id_vsts}}</span>
+
+        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.id_vsts">
+          <mat-label>Usuário</mat-label>
+          <input matInput [(ngModel)]="element.id_vsts">
+          <button mat-icon-button matSuffix color="primary" aria-label="">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix (click)="hideInputIdVsts(element)" color="warn" aria-label="">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="id_task">
+      <th mat-header-cell *matHeaderCellDef> Id Task </th>
+      <td mat-cell *matCellDef="let element" (dblclick)="showInputIdTask(element)">
+        <span *ngIf="!element.isItInEdit.id_task">{{element.id_task}}</span>
+        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.id_task">
+          <mat-label>Usuário</mat-label>
+          <input matInput [(ngModel)]="element.id_task">
+          <button mat-icon-button matSuffix color="primary" aria-label="">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix (click)="hideInputIdTask(element)" color="warn" aria-label="">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Data </th>
+      <td mat-cell *matCellDef="let element" (dblclick)="showInputDate(element)">
+        <span *ngIf="!element.isItInEdit.date">
+          {{dateService.formatDate(element.date)}}
+        </span>
+        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.date">
+          <input matInput [matDatepicker]="data" [(ngModel)]="element.date">
+          <mat-datepicker-toggle matSuffix [for]="data"></mat-datepicker-toggle>
+          <button mat-icon-button matSuffix color="primary" aria-label="">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix (click)="hideInputDate(element)" color="warn" aria-label="">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker #data></mat-datepicker>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="start_at">
+      <th mat-header-cell *matHeaderCellDef> Inicio </th>
+      <td mat-cell *matCellDef="let element" (dblclick)="showInputStartAt(element)">
+        <span *ngIf="!element.isItInEdit.start_at">{{dateService.formatTime(element.start_at)}}</span>
+        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.start_at">
+          <input [ngxTimepicker]="picker" [(ngModel)]="element.start_at" [format]="24" matInput>
+          <ngx-material-timepicker #picker ></ngx-material-timepicker>
+          <button mat-icon-button matSuffix color="primary" aria-label="">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix (click)="hideInputStartAt(element)" color="warn" aria-label="">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="end_at">
+      <th mat-header-cell *matHeaderCellDef> Fim </th>
+      <td mat-cell *matCellDef="let element" (dblclick)="showInputEndAt(element)">
+        <span *ngIf="!element.isItInEdit.end_at">{{element.end_at_string}}</span>
+        <mat-form-field appearance="fill" *ngIf="element.isItInEdit.end_at">
+          <input [ngxTimepicker]="picker" [(ngModel)]="element.end_at_string" (change)="changeEndAt(element)" [format]="24" matInput>
+          <ngx-material-timepicker #picker ></ngx-material-timepicker>
+          <button mat-icon-button matSuffix color="primary" aria-label="">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix (click)="hideInputEndAt(element)" color="warn" aria-label="">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="interval">
+      <th mat-header-cell *matHeaderCellDef> Intervalo </th>
+      <td mat-cell *matCellDef="let element"> {{dateService.formatTime(element.interval)}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+    ></tr>
+
+  </table>
+</div>

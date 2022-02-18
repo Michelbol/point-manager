@@ -21,5 +21,5 @@ $router->get('/', function () use ($router) {
 
 
 $router->group(['prefix' => 'task', 'namespace' => 'Task'],function (Router $router){
-    $router->get('token', 'LoginController@token');
+    $router->post('token', 'LoginController@token');
 });
