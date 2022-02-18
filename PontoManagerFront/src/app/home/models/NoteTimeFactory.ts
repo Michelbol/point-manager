@@ -8,7 +8,7 @@ import {Injectable} from "@angular/core";
 export class NoteTimeFactory {
   constructor(public dateService: DateService) { }
 
-  create(id: number): NoteTime {
+  create(id: number, date: Date): NoteTime {
     return {
       id: id+1,
       id_vsts: {
@@ -20,7 +20,7 @@ export class NoteTimeFactory {
         editable: false
       },
       date: {
-        value: new Date(),
+        value: date,
         editable: false
       },
       start_at: {

@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['select', 'id_vsts', 'id_task', 'date', 'start_at', 'end_at', 'interval'];
   selection = new SelectionModel<NoteTime>(true, []);
   oldValue: any;
+  actualDates = new Date();
 
   @ViewChild(MatTable) table!: MatTable<NoteTime>;
 
@@ -30,7 +31,7 @@ export class HomeComponent implements OnInit {
   }
 
   newRow(){
-    let note = this.noteTimeFactory.create(this.dataSource.length);
+    let note = this.noteTimeFactory.create(this.dataSource.length, this.actualDates);
     this.calcInterval(note);
     this.addRow(note);
     this.table.renderRows();

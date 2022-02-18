@@ -56,6 +56,6 @@ import { MAT_DATE_LOCALE } from '@angular/material/core'
     DatePipe,
     {provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [LoginComponent]
 })
 export class AppModule { }
