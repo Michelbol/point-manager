@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use App\Factory\HttpClientFactory;
-use App\Services\Client\WebServiceClientInterface;
-use App\Services\Client\WebServiceTaskClient;
-use App\Services\TaskService;
+use App\Task\Client\WebServiceClientInterface;
+use App\Task\Client\WebServiceTaskClient;
+use App\Task\Services\TaskApiService;
 use Illuminate\Support\ServiceProvider;
 
 class FactoryTaskProvider extends ServiceProvider
@@ -18,7 +18,7 @@ class FactoryTaskProvider extends ServiceProvider
     public function boot()
     {
 
-        $this->app->when(TaskService::class)
+        $this->app->when(TaskApiService::class)
             ->needs(WebServiceClientInterface::class)
             ->give(function(){
                 return new WebServiceTaskClient(HttpClientFactory::createClient());

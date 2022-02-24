@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Client;
+namespace App\Task\Client;
 
 class WebServiceTaskClient extends  WebServiceClientAbstract
 {

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Task\Services;
 
 use App\Http\Controllers\Requests\AuthTaskRequest;
-use App\Services\Client\WebServiceClientInterface;
+use App\Task\Client\WebServiceClientInterface;
+use App\Task\Responses\TokenResponse;
 use GuzzleHttp\Psr7\Response;
 
-class TaskService
+class TaskApiService
 {
     protected $client;
 
@@ -32,7 +33,7 @@ class TaskService
         ];
     }
 
-    public function auth(AuthTaskRequest $request)
+    public function auth(AuthTaskRequest $request): TokenResponse
     {
         $response = $this->getResponse(function () use ($request) {
             return $this->client->post(
@@ -40,6 +41,6 @@ class TaskService
                 $request->createRequestBody()
             );
         });
-        return $response;
+        return new TokenResponse($response);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services\Client;
+namespace App\Task\Client;
 
 
 interface WebServiceClientInterface

@@ -8,16 +8,16 @@ class TokenResponse
 
     private $expires_in;
 
+    private $token_type;
+
     /**
-     * @param $access_token
-     * @param $expires_in
-     * @param $token_type
+     * @param array $response
      */
-    public function __construct($access_token, $expires_in, $token_type)
+    public function __construct(array $response)
     {
-        $this->access_token = $access_token;
-        $this->expires_in = $expires_in;
-        $this->token_type = $token_type;
+        $this->access_token = $response['data']['access_token'];
+        $this->expires_in = $response['data']['expires_in'];
+        $this->token_type = $response['data']['token_type'];
     }
 
     /**
@@ -67,5 +67,4 @@ class TokenResponse
     {
         $this->token_type = $token_type;
     }
-    private $token_type;
 }
