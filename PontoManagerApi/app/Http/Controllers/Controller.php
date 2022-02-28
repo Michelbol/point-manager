@@ -37,4 +37,14 @@ class Controller extends BaseController
             ],
             $statusCode);
     }
+
+    public function okResponse()
+    {
+        return response()->json();
+    }
+
+    public function createdResponse(ResponseInterface $data)
+    {
+        return $this->dataResponse($data, 201);
+    }
 }
