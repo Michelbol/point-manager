@@ -22,4 +22,8 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'task', 'namespace' => 'Task'],function (Router $router){
     $router->post('token', 'LoginController@token');
+    $router->group(['middleware' => 'auth'], function(Router $router){
+        $router->get('my-tasks', 'TaskController@myTasks');
+        $router->get('task/{id}', 'TaskController@findTask');
+    });
 });

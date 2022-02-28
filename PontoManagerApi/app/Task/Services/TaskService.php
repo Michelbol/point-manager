@@ -2,10 +2,10 @@
 
 namespace App\Task\Services;
 
-use App\Http\Controllers\Requests\AuthTaskRequest;
 use App\Http\Controllers\Responses\AuthTaskResponse;
-use App\Models\User;
 use App\Repository\UserRepository;
+use App\Task\Requests\AuthTaskRequest;
+use App\Task\Requests\GetTaskByUserTaskRequest;
 
 class TaskService
 {
@@ -33,11 +33,30 @@ class TaskService
             $user = $this->repository->createUserByUsername($username);
         }
 
-        $this->repository->updateApiToken($user, $response->getAccessToken());
-
-        return new AuthTaskResponse(
+        $authResponse = new AuthTaskResponse(
             $response,
             $user
         );
+
+        $this->repository->updateUser(
+            $user,
+            [
+                'task_token' => $response->getAccessToken(),
+                'task_expire_at' => $authResponse->getUserData()->getExpireAt(),
+                'api_token' => base64_encode("$username:$user->id")
+            ]
+        );
+
+        return $authResponse;
+    }
+
+    public function getTasksLoggedUser()
+    {
+        /**
+         * @var $service TaskApiAuthService
+         */
+        $service = app(TaskApiAuthService::class);
+        $response = $service->getTasksByUser(new GetTaskByUserTaskRequest());
+        dd($response->getTaskList()[0]->getExecucaoList());
     }
 }

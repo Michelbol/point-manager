@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Factory\HttpClientAuthFactory;
 use App\Factory\HttpClientFactory;
 use App\Task\Client\WebServiceClientInterface;
+use App\Task\Client\WebServiceTaskAuthClient;
 use App\Task\Client\WebServiceTaskClient;
+use App\Task\Services\TaskApiAuthService;
 use App\Task\Services\TaskApiService;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +25,12 @@ class FactoryTaskProvider extends ServiceProvider
             ->needs(WebServiceClientInterface::class)
             ->give(function(){
                 return new WebServiceTaskClient(HttpClientFactory::createClient());
+            });
+
+        $this->app->when(TaskApiAuthService::class)
+            ->needs(WebServiceClientInterface::class)
+            ->give(function(){
+                return new WebServiceTaskAuthClient(HttpClientAuthFactory::createClient());
             });
     }
 }

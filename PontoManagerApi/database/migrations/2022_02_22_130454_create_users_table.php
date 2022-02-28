@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->text('api_token')->nullable();
-            $table->string('task_token')->nullable();
+            $table->text('task_token')->nullable();
             $table->dateTime('task_expire_at')->nullable();
             $table->timestamps();
         });

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Requests;
+namespace App\Task\Requests;
 
-use App\Http\Controllers\Requests\Interfaces\RequestInterface;
+use function config;
 
-class AuthTaskRequest implements RequestInterface
+class AuthTaskRequest implements BaseRequest
 {
     private $username;
 
@@ -60,23 +60,22 @@ class AuthTaskRequest implements RequestInterface
         return "api/security/token";
     }
 
-    /**
-     * @return array
-     */
-    public function createRequestQueryParam(): array
+    public function getMethod(): string
     {
-        return [];
+        return 'post';
     }
 
-    /**
-     * @return array
-     */
-    public function createRequestBody(): array
+    public function generateBody(): array
     {
         return [
-            'grant_type' => config('task.grant_type'),
+        'grant_type' => config('task.grant_type'),
             'username' => $this->username,
             'password' => $this->password,
         ];
+    }
+
+    public function generateQueryParams(): array
+    {
+        return [];
     }
 }

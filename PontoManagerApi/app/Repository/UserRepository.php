@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class UserRepository
 {
@@ -16,9 +17,16 @@ class UserRepository
         return User::create(['username' => $username]);
     }
 
-    public function updateApiToken(User $user, string $apiToken)
+    public function updateUser(User $user, array $fields)
     {
-        $user->api_token = $apiToken;
-        $user->save();
+        $user->update($fields);
+    }
+
+    public function findUserLoggedByApiToken(string $apiToken)
+    {
+        return User
+            ::where('api_token', $apiToken)
+            ->where('task_expire_at', '>', Carbon::now())
+            ->first();
     }
 }
