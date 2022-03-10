@@ -12,11 +12,11 @@ export class NoteTimeFactory {
     return {
       id: id+1,
       id_vsts: {
-        value: 1,
+        value: 0,
         editable: false
       },
       id_task: {
-        value: 1,
+        value: 0,
         editable: false
       },
       date: {

@@ -1,9 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { DateService } from '../services/date.service';
+import {DateService} from '../services/date.service';
 import {MatTable} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
 import {NoteTime} from "./models/NoteTime";
 import {NoteTimeFactory} from "./models/NoteTimeFactory";
+import {NoteTimeService} from "../services/note-time.service";
+import {DialogService} from "../services/dialog.service";
+import {NoteTimeResponseMapper} from "./models/NoteTimeResponseMapper";
 
 @Component({
   selector: 'app-home',
@@ -19,25 +22,90 @@ export class HomeComponent implements OnInit {
 
   @ViewChild(MatTable) table!: MatTable<NoteTime>;
 
-  constructor(public dateService: DateService, private noteTimeFactory: NoteTimeFactory) {
+  constructor(
+    public dateService: DateService,
+    private noteTimeFactory: NoteTimeFactory,
+    private noteTimeService: NoteTimeService,
+    private dialogService: DialogService,
+  ) {
   }
 
   ngOnInit(): void {
+    this.loadMyTasks();
   }
 
-  addRow(note: NoteTime){
+  addRow(note: NoteTime) {
     this.dataSource.push(note);
     this.table.renderRows();
   }
 
-  newRow(){
+  newEditableFieldNumber(number: number){
+    return {
+      value: number,
+      editable: false
+    }
+  }
+
+  newEditableFieldDate(date: Date){
+    return {
+      value: date,
+      editable: false
+    };
+  }
+
+  newEditableFieldTime(date: Date){
+    return {
+      string: this.dateService.formatTime(date),
+      value: date,
+      editable: false
+    };
+  }
+
+  loadMyTasks(){
+    this.noteTimeService.myTasks(
+      (data: Array<NoteTimeResponseMapper>) => {
+        this.dataSource = [];
+        data.map((noteTimeResponse) => {
+          let startAt: Date = noteTimeResponse.start_at === null ? new Date() : this.dateService.formatServerDateTimeToDate(noteTimeResponse.start_at);
+          let endAt: Date = noteTimeResponse.end_at === null ? new Date() : this.dateService.formatServerDateTimeToDate(noteTimeResponse.end_at);
+          let note: NoteTime = {
+            id: noteTimeResponse.id,
+            id_vsts: this.newEditableFieldNumber(noteTimeResponse.id_vsts),
+            id_task: this.newEditableFieldNumber(noteTimeResponse.id_task),
+            date: this.newEditableFieldDate(new Date()),
+            start_at: this.newEditableFieldTime(startAt),
+            end_at: this.newEditableFieldTime(endAt),
+            interval: new Date()
+          };
+          this.calcInterval(note);
+          this.newTableRow(note);
+        })
+      },
+      (error: any) => {
+        this.dialogService.open('Erro', error.message);
+      }
+    );
+  }
+
+  newRow() {
     let note = this.noteTimeFactory.create(this.dataSource.length, this.actualDates);
     this.calcInterval(note);
+    this.noteTimeService.saveNoteTime(note,
+      ({ data }: any, note: NoteTime) => {
+        note.id = data.id;
+        this.newTableRow(note);
+      },
+      ({ error }: any) => {
+        this.dialogService.open('Erro', error.message);
+      });
+  }
+
+  newTableRow(note: NoteTime){
     this.addRow(note);
     this.table.renderRows();
   }
 
-  removeSelectRows(){
+  removeSelectRows() {
     for (let index in this.selection.selected) {
       this.removeDataSourceById(this.selection.selected[index].id)
     }
@@ -45,9 +113,9 @@ export class HomeComponent implements OnInit {
     this.table.renderRows();
   }
 
-  removeDataSourceById(id: number){
+  removeDataSourceById(id: number) {
     for (const noteTime in this.dataSource) {
-      if(this.dataSource[noteTime].id === id){
+      if (this.dataSource[noteTime].id === id) {
         this.dataSource.splice(Number(noteTime), 1);
       }
     }
@@ -75,68 +143,71 @@ export class HomeComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
 
-  closeOthersInputs(){
+  closeOthersInputs() {
     this.dataSource.map((item) => {
-      if(item.id_vsts.editable){
+      if (item.id_vsts.editable) {
         this.cancelInput(item.id_vsts);
       }
-      if(item.id_task.editable){
+      if (item.id_task.editable) {
         this.cancelInput(item.id_task);
       }
-      if(item.date.editable){
+      if (item.date.editable) {
         this.cancelInput(item.date);
       }
-      if(item.start_at.editable){
+      if (item.start_at.editable) {
         this.cancelInput(item.start_at);
       }
-      if(item.end_at.editable){
+      if (item.end_at.editable) {
         this.cancelInput(item.end_at);
       }
     })
   }
 
-  showInput(item: any){
+  showInput(item: any) {
     this.closeOthersInputs();
     this.oldValue = item.value;
     item.editable = true;
   }
 
-  cancelInput(item: any){
+  cancelInput(item: any) {
     item.editable = false;
     item.value = this.oldValue;
-    if(item.string !== undefined){
+    if (item.string !== undefined) {
       item.string = this.dateService.formatTime(this.oldValue);
     }
     this.oldValue = null;
   }
 
-  saveInput(item: any, note: NoteTime){
+  saveInput(item: any, note: NoteTime) {
     item.editable = false;
+    if(typeof this.oldValue === "number" && item.value === null){
+      item.value = 0;
+    }
     this.oldValue = null;
-    if(item.value instanceof Date){
-        item.value = this.dateService.formatStringToDateTime(item.string);
+    if (item.value instanceof Date) {
+      item.value = this.dateService.formatStringToDateTime(item.string);
       this.calcInterval(note);
     }
   }
 
-  calcTotalInterval(){
+  calcTotalInterval() {
     let totalHours = new Date();
-    totalHours.setHours(0,0,0,0);
+    totalHours.setHours(0, 0, 0, 0);
     totalHours = this.dataSource.reduce((sum, item) => {
       sum.setHours(
         sum.getHours() + item.interval.getHours(),
-      sum.getMinutes() + item.interval.getMinutes()
+        sum.getMinutes() + item.interval.getMinutes()
       );
       return sum;
     }, totalHours)
     return this.dateService.formatTime(totalHours);
   }
 
-  calcInterval(note: NoteTime){
+  calcInterval(note: NoteTime) {
     let hours = note.end_at.value.getHours() - note.start_at.value.getHours();
     let minutes = note.end_at.value.getMinutes() - note.start_at.value.getMinutes();
     let result = new Date();
-    result.setHours(hours,minutes);
+    result.setHours(hours, minutes);
     note.interval = result;
   }
 }

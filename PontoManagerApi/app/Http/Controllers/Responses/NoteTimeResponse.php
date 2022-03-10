@@ -37,10 +37,10 @@ class NoteTimeResponse implements ResponseInterface
     {
         return [
             'id' => $this->id,
-            'id_vsts' => $this->id_vsts,
-            'id_task' => $this->id_task,
-            'start_at' => $this->start_at->format('Y-m-d H:i'),
-            'end_at' => $this->end_at->format('Y-m-d H:i'),
+            'id_vsts' => $this->id_vsts ?? 0,
+            'id_task' => $this->id_task ?? 0,
+            'start_at' => isset($this->start_at) ? $this->start_at->format('Y-m-d H:i') : null,
+            'end_at' => isset($this->end_at) ? $this->end_at->format('Y-m-d H:i') : null,
             'sync_at' => isset($this->sync_at) ? $this->sync_at->format('Y-m-d H:i') : null,
         ];
     }

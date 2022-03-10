@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class NoteTime extends Model
@@ -24,5 +25,21 @@ class NoteTime extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getStartAtAttribute($value)
+    {
+        if(isset($value) && is_string($value)){
+            return Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfMinute();
+        }
+        return $value;
+    }
+
+    public function getEndAtAttribute($value)
+    {
+        if(isset($value) && is_string($value)){
+            return Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfMinute();
+        }
+        return $value;
     }
 }

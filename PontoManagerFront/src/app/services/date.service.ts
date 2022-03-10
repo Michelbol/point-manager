@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {DatePipe} from "@angular/common";
 
+const SERVER_DATE_FORMAT = 'yyyy-MM-dd'
 const DATE_DEFAULT = 'dd/MM/yyyy';
 const TIME_DEFAULT = 'HH:mm';
 const DATE_TIME_DEFAULT = 'dd/MM/yyyy HH:mm';
@@ -18,6 +19,20 @@ export class DateService {
 
   formatDate(date: Date){
     return this.formatDateToString(date, DATE_DEFAULT);
+  }
+
+  formatDateToServer(date: Date){
+    return this.formatDateToString(date, SERVER_DATE_FORMAT);
+  }
+
+  formatServerDateTimeToDate(dateTime: string){
+    let [date, hours] = dateTime.split(" ");
+    let [year, month, day] = date.split("-");
+    let [hour, min] = hours.split(":");
+    let newDate = new Date();
+    newDate.setFullYear(Number(year), Number(month), Number(day));
+    newDate.setHours(Number(hour), Number(min));
+    return newDate;
   }
 
   formatTime(date: Date){

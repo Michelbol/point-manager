@@ -21,13 +21,19 @@ class NoteTimeController extends Controller
 
     public function listToday()
     {
-        return $this
+        $noteTimes = $this
             ->service
             ->listByDate(
                 Carbon::now()->startOfDay(),
                 Carbon::now()->endOfDay(),
                 Auth::user()
             );
+        $response = [];
+        foreach ($noteTimes as $noteTime){
+            $response[] = (new NoteTimeResponse($noteTime))->toArray();
+        }
+
+        return $response;
     }
 
     public function save(Request $request)

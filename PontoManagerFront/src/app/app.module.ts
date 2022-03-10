@@ -23,13 +23,17 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { MatNativeDateModule } from "@angular/material/core";
 import { MAT_DATE_LOCALE } from '@angular/material/core'
-
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import { DialogComponent } from './dialog/dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {AuthInterceptor} from "./http-interceptors/auth-interceptor";
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
@@ -50,12 +54,17 @@ import { MAT_DATE_LOCALE } from '@angular/material/core'
     MatCheckboxModule,
     NgxMaterialTimepickerModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    HttpClientModule,
+    MatDialogModule
   ],
   providers: [
     DatePipe,
     {provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+    [
+      { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    ]
   ],
-  bootstrap: [LoginComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
