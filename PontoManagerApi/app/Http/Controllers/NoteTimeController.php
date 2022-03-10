@@ -19,13 +19,27 @@ class NoteTimeController extends Controller
         $this->service = $service;
     }
 
-    public function listToday()
+    public function listToday(Request $request)
     {
+
+        $fields = $this->validate($request, [
+            'date' => [
+                'nullable',
+                'date_format:Y-m-d'
+            ]
+        ]);
+        $startAt = Carbon::now();
+        $endAt = Carbon::now();
+        if(isset($fields['date'])){
+            $startAt = Carbon::createFromFormat('Y-m-d', $fields['date']);
+            $endAt = Carbon::createFromFormat('Y-m-d', $fields['date']);
+        }
+
         $noteTimes = $this
             ->service
             ->listByDate(
-                Carbon::now()->startOfDay(),
-                Carbon::now()->endOfDay(),
+                $startAt->startOfDay(),
+                $endAt->endOfDay(),
                 Auth::user()
             );
         $response = [];

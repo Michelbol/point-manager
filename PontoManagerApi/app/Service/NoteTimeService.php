@@ -57,16 +57,24 @@ class NoteTimeService
         $model->sync_at = $data['sync_at'] ?? null;
         $model->description = $data['description'] ?? null;
         $model->user_id = $data['user_id'];
-        $model->start_at = $this->createCarbon($data['start_at']);
+        $model->start_at = $this->createCarbonStartAt($data['start_at']);
         if(isset($data['start_at']) && isset($data['end_at'])){
-            $model->end_at = $this->createCarbon($data['end_at']);
+            $model->end_at = $this->createCarbonEndAt($data['end_at']);
         }else if(isset($data['start_at'])){
-            $model->start_at = $this->createCarbon($data['start_at']);
+            $model->start_at = $this->createCarbonStartAt($data['start_at']);
         }else if(isset($data['end_at'])){
-            $model->end_at = $this->createCarbon($data['end_at']);
+            $model->end_at = $this->createCarbonEndAt($data['end_at']);
         }
+        $this->fixSecond($model);
         $this->isUnique($model);
         return $model;
+    }
+
+    public function fixSecond($model)
+    {
+        if($this->repository->existsEndAtAndUser($model->start_at, $model->user_id, $model->id)){
+            $model->start_at->addSecond();
+        }
     }
 
     public function delete($id)
@@ -91,7 +99,11 @@ class NoteTimeService
         }
     }
 
-    private function createCarbon(string $date){
+    private function createCarbonStartAt(string $date){
+        return Carbon::createFromFormat('Y-m-d H:i', $date)->startOfMinute();
+    }
+
+    private function createCarbonEndAt(string $date){
         return Carbon::createFromFormat('Y-m-d H:i', $date)->startOfMinute();
     }
 

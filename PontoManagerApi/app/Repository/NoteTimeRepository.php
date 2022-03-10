@@ -27,6 +27,7 @@ class NoteTimeRepository
             ::whereBetween('start_at',[$startAt, $endAt])
             ->whereUserId($userId)
             ->where('id', '!=', $except)
+            ->orderBy('start_at')
             ->get();
     }
 
@@ -48,10 +49,10 @@ class NoteTimeRepository
                 ->count() > 0;
     }
 
-    public function existsEndAtAndUser(Carbon $startAt, int $userId, $except = 0): bool
+    public function existsEndAtAndUser(Carbon $endAt, int $userId, $except = 0): bool
     {
         return NoteTime
-                ::where('end_at', $startAt)
+                ::where('end_at', $endAt)
                 ->whereUserId($userId)
                 ->where('id', '!=', $except)
                 ->count() > 0;
