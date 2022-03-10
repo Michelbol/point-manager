@@ -55,6 +55,7 @@ class NoteTimeService
         $model->id_vsts = $data['id_vsts'] ?? null;
         $model->id_task = $data['id_task'] ?? null;
         $model->sync_at = $data['sync_at'] ?? null;
+        $model->description = $data['description'] ?? null;
         $model->user_id = $data['user_id'];
         $model->start_at = $this->createCarbon($data['start_at']);
         if(isset($data['start_at']) && isset($data['end_at'])){

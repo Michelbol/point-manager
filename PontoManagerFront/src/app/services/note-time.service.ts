@@ -57,4 +57,15 @@ export class NoteTimeService {
         error: (res) => error(res)
       });
   }
+
+  deleteMany(note: NoteTime[], success: Function, error: Function){
+    let ids: number[] = note.map((item) => {return item.id});
+    this
+      .apiAuth
+      .deleteManyTasks(ids)
+      .subscribe({
+        next: (data) => success(data, note),
+        error: (res) => error(res)
+    })
+  }
 }

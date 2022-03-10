@@ -107,11 +107,20 @@ export class HomeComponent implements OnInit {
   }
 
   removeSelectRows() {
-    for (let index in this.selection.selected) {
-      this.removeDataSourceById(this.selection.selected[index].id)
-    }
-    this.selection.clear();
-    this.table.renderRows();
+    this
+      .noteTimeService
+      .deleteMany(
+        this.selection.selected,
+        () => {
+          for (let index in this.selection.selected) {
+            this.removeDataSourceById(this.selection.selected[index].id)
+          }
+          this.selection.clear();
+          this.table.renderRows();
+        },
+        ({error}: any) => {
+          this.dialogService.open('Erro', error.message);
+        });
   }
 
   removeDataSourceById(id: number) {

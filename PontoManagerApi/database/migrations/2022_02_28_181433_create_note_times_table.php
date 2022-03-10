@@ -17,6 +17,7 @@ class CreateNoteTimesTable extends Migration
             $table->id();
             $table->string('id_vsts')->nullable();
             $table->string('id_task')->nullable();
+            $table->string('description')->nullable();
             $table->dateTime('start_at')->nullable();
             $table->dateTime('end_at')->nullable();
             $table->dateTime('sync_at')->nullable();

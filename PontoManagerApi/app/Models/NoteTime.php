@@ -19,7 +19,8 @@ class NoteTime extends Model
         'start_at',
         'end_at',
         'sync_at',
-        'user_id'
+        'user_id',
+        'description',
     ];
 
     public function user()

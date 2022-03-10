@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {NoteTimeRequestMapper} from "../home/models/NoteTimeRequestMapper";
+import {NoteTime} from "../home/models/NoteTime";
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,17 @@ export class ApiAuthService {
         end_at: note.end_at,
         id_vsts: note.id_vsts,
         id_task: note.id_task
+      }
+    );
+  }
+
+  deleteManyTasks(notes: number[]){
+    return this.http.delete(
+      `${this.urlBase}/note-time/many`,
+      {
+        body: {
+          ids: notes
+        }
       }
     );
   }

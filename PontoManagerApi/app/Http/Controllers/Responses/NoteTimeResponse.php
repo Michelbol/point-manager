@@ -19,6 +19,8 @@ class NoteTimeResponse implements ResponseInterface
 
     private $sync_at;
 
+    private $description;
+
     /**
      * @param NoteTime $model
      */
@@ -30,6 +32,7 @@ class NoteTimeResponse implements ResponseInterface
         $this->start_at = $model->start_at;
         $this->end_at = $model->end_at;
         $this->sync_at = $model->sync_at;
+        $this->description = $model->description;
     }
 
 
@@ -42,6 +45,7 @@ class NoteTimeResponse implements ResponseInterface
             'start_at' => isset($this->start_at) ? $this->start_at->format('Y-m-d H:i') : null,
             'end_at' => isset($this->end_at) ? $this->end_at->format('Y-m-d H:i') : null,
             'sync_at' => isset($this->sync_at) ? $this->sync_at->format('Y-m-d H:i') : null,
+            'description' => $this->description,
         ];
     }
 }

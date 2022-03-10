@@ -51,6 +51,11 @@ class NoteTimeController extends Controller
                 'nullable',
                 'integer'
             ],
+            'description' => [
+                'nullable',
+                'string',
+                'max:255'
+            ],
             'id_task' => [
                 'nullable',
                 'integer'
@@ -84,6 +89,11 @@ class NoteTimeController extends Controller
             'id_vsts' => [
                 'nullable',
                 'integer'
+            ],
+            'description' => [
+                'nullable',
+                'string',
+                'max:255'
             ],
             'id_task' => [
                 'nullable',
