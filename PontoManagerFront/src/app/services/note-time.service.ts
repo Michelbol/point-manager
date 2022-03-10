@@ -24,16 +24,34 @@ export class NoteTimeService {
 
   saveNoteTime(note: NoteTime, success: Function, error: Function) {
     const date = this.date.formatDateToServer(note.date.value);
-    let mapperNote: NoteTimeRequestMapper = {
+    const mapperNote: NoteTimeRequestMapper = {
       id: null,
       end_at: `${date} ${note.end_at.string}`,
       start_at: `${date} ${note.start_at.string}`,
-      id_vsts: note.id_vsts.value > 0 ? note.id_vsts.value : null,
-      id_task: note.id_task.value > 0 ? note.id_task.value : null
+      id_vsts: note.id_vsts.value,
+      id_task: note.id_task.value
     };
     return this
       .apiAuth
       .createTask(mapperNote)
+      .subscribe({
+        next: (data) => success(data, note),
+        error: (res) => error(res)
+      });
+  }
+
+  updateNoteTime(note: NoteTime, success: Function, error: Function) {
+    const date = this.date.formatDateToServer(note.date.value);
+    const mapperNote: NoteTimeRequestMapper = {
+      id: note.id,
+      end_at: `${date} ${note.end_at.string}`,
+      start_at: `${date} ${note.start_at.string}`,
+      id_vsts: note.id_vsts.value,
+      id_task: note.id_task.value
+    };
+    return this
+      .apiAuth
+      .updateTask(mapperNote)
       .subscribe({
         next: (data) => success(data, note),
         error: (res) => error(res)

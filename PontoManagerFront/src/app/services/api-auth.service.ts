@@ -30,4 +30,16 @@ export class ApiAuthService {
       }
     );
   }
+
+  updateTask(note: NoteTimeRequestMapper){
+    return this.http.put(
+      `${this.urlBase}/note-time/${note.id}`,
+      {
+        start_at: note.start_at,
+        end_at: note.end_at,
+        id_vsts: note.id_vsts,
+        id_task: note.id_task
+      }
+    );
+  }
 }

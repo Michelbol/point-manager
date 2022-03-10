@@ -39,21 +39,21 @@ export class HomeComponent implements OnInit {
     this.table.renderRows();
   }
 
-  newEditableFieldNumber(number: number){
+  newEditableFieldNumber(number: number) {
     return {
       value: number,
       editable: false
     }
   }
 
-  newEditableFieldDate(date: Date){
+  newEditableFieldDate(date: Date) {
     return {
       value: date,
       editable: false
     };
   }
 
-  newEditableFieldTime(date: Date){
+  newEditableFieldTime(date: Date) {
     return {
       string: this.dateService.formatTime(date),
       value: date,
@@ -61,7 +61,7 @@ export class HomeComponent implements OnInit {
     };
   }
 
-  loadMyTasks(){
+  loadMyTasks() {
     this.noteTimeService.myTasks(
       (data: Array<NoteTimeResponseMapper>) => {
         this.dataSource = [];
@@ -90,17 +90,18 @@ export class HomeComponent implements OnInit {
   newRow() {
     let note = this.noteTimeFactory.create(this.dataSource.length, this.actualDates);
     this.calcInterval(note);
-    this.noteTimeService.saveNoteTime(note,
-      ({ data }: any, note: NoteTime) => {
+    this.noteTimeService.saveNoteTime(
+      note,
+      ({data}: any, note: NoteTime) => {
         note.id = data.id;
         this.newTableRow(note);
       },
-      ({ error }: any) => {
+      ({error}: any) => {
         this.dialogService.open('Erro', error.message);
       });
   }
 
-  newTableRow(note: NoteTime){
+  newTableRow(note: NoteTime) {
     this.addRow(note);
     this.table.renderRows();
   }
@@ -179,15 +180,23 @@ export class HomeComponent implements OnInit {
   }
 
   saveInput(item: any, note: NoteTime) {
-    item.editable = false;
-    if(typeof this.oldValue === "number" && item.value === null){
-      item.value = 0;
-    }
-    this.oldValue = null;
-    if (item.value instanceof Date) {
-      item.value = this.dateService.formatStringToDateTime(item.string);
-      this.calcInterval(note);
-    }
+    this.noteTimeService.updateNoteTime(
+      note,
+      (date: any) => {
+        item.editable = false;
+        if (typeof this.oldValue === "number" && item.value === null) {
+          item.value = 0;
+        }
+        this.oldValue = null;
+        if (item.value instanceof Date) {
+          item.value = this.dateService.formatStringToDateTime(item.string);
+          this.calcInterval(note);
+        }
+      },
+      ({error}: any) => {
+        this.dialogService.open("Erro", error.message);
+      }
+    );
   }
 
   calcTotalInterval() {
