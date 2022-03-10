@@ -115,6 +115,9 @@ export class HomeComponent implements OnInit {
   }
 
   removeSelectRows() {
+    if(this.selection.selected.length === 0){
+      return;
+    }
     this
       .noteTimeService
       .deleteMany(
