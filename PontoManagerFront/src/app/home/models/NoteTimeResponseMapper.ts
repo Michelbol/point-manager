@@ -6,5 +6,6 @@ export interface NoteTimeResponseMapper {
   end_at: string|null,
   sync_at: string|null,
   created_at: string
-  updated_at: string|null
+  updated_at: string|null,
+  description: string|null
 }

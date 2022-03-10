@@ -1,6 +1,7 @@
 import {EditableFieldNumber} from "./EditableFieldNumber";
 import {EditableFieldTime} from "./EditableFieldTime";
 import {EditableFieldDate} from "./EditableFieldDate";
+import {EditableFieldText} from "./EditableFieldText";
 
 export interface NoteTime {
   id: number,
@@ -10,4 +11,5 @@ export interface NoteTime {
   start_at: EditableFieldTime,
   end_at: EditableFieldTime,
   interval: Date,
+  description: EditableFieldText
 }

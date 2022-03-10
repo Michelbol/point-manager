@@ -4,4 +4,5 @@ export interface NoteTimeRequestMapper {
   id_task: number|null,
   start_at: string,
   end_at: string,
+  description: string|null
 }

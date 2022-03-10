@@ -33,7 +33,11 @@ export class NoteTimeFactory {
         editable: false,
         string: this.dateService.formatTime(new Date())
       },
-      interval: new Date
+      interval: new Date,
+      description: {
+        value: "",
+        editable: false
+      }
     };
   }
 }

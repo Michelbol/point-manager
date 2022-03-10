@@ -59,6 +59,25 @@
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Descrição. </th>
+      <td mat-cell *matCellDef="let element" (dblclick)="showInput(element.description)">
+        <span *ngIf="!element.description.editable">{{element.description.value}}</span>
+
+        <mat-form-field appearance="fill" *ngIf="element.description.editable">
+          <mat-label>Descrição</mat-label>
+          <input type="text" matInput [(ngModel)]="element.description.value">
+          <button mat-icon-button matSuffix color="primary" aria-label="" (click)="saveInput(element.description, element)">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix (click)="cancelInput(element.description)" color="warn" aria-label="">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
     <ng-container matColumnDef="id_task">
       <th mat-header-cell *matHeaderCellDef> Id Task </th>
       <td mat-cell *matCellDef="let element" (dblclick)="showInput(element.id_task)">

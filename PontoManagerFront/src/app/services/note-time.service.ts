@@ -29,7 +29,8 @@ export class NoteTimeService {
       end_at: `${date} ${note.end_at.string}`,
       start_at: `${date} ${note.start_at.string}`,
       id_vsts: note.id_vsts.value,
-      id_task: note.id_task.value
+      id_task: note.id_task.value,
+      description: note.description.value,
     };
     return this
       .apiAuth
@@ -47,7 +48,8 @@ export class NoteTimeService {
       end_at: `${date} ${note.end_at.string}`,
       start_at: `${date} ${note.start_at.string}`,
       id_vsts: note.id_vsts.value,
-      id_task: note.id_task.value
+      id_task: note.id_task.value,
+      description: note.description.value,
     };
     return this
       .apiAuth

@@ -15,7 +15,7 @@ import {NoteTimeResponseMapper} from "./models/NoteTimeResponseMapper";
 })
 export class HomeComponent implements OnInit {
   dataSource: NoteTime[] = [];
-  displayedColumns: string[] = ['select', 'id_vsts', 'id_task', 'date', 'start_at', 'end_at', 'interval'];
+  displayedColumns: string[] = ['select', 'id_vsts', 'id_task', 'date', 'start_at', 'end_at', 'interval', 'description'];
   selection = new SelectionModel<NoteTime>(true, []);
   oldValue: any;
   actualDates = new Date();
@@ -42,6 +42,13 @@ export class HomeComponent implements OnInit {
   newEditableFieldNumber(number: number) {
     return {
       value: number,
+      editable: false
+    }
+  }
+
+  newEditableFieldText(text: string|null) {
+    return {
+      value: text,
       editable: false
     }
   }
@@ -75,7 +82,8 @@ export class HomeComponent implements OnInit {
             date: this.newEditableFieldDate(new Date()),
             start_at: this.newEditableFieldTime(startAt),
             end_at: this.newEditableFieldTime(endAt),
-            interval: new Date()
+            interval: new Date(),
+            description: this.newEditableFieldText(noteTimeResponse.description)
           };
           this.calcInterval(note);
           this.newTableRow(note);
