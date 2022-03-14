@@ -19,7 +19,7 @@ class NoteTimeController extends Controller
         $this->service = $service;
     }
 
-    public function listToday(Request $request)
+    public function list(Request $request)
     {
 
         $fields = $this->validate($request, [

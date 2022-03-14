@@ -27,7 +27,7 @@ $router->group(['middleware' => 'auth'], function(Router $router){
 //        $router->get('task/{id}', 'TaskController@findTask');
     });
 
-    $router->get('/note-time/today', 'NoteTimeController@listToday');
+    $router->get('/note-time', 'NoteTimeController@list');
     $router->post('/note-time', 'NoteTimeController@save');
     $router->put('/note-time/{id}', 'NoteTimeController@update');
     $router->delete('/note-time/many', 'NoteTimeController@deleteMany');
