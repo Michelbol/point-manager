@@ -15,11 +15,13 @@ export class NoteTimeService {
   ) {
   }
 
-  myTasks(success: Function, error: Function){
-    return this.apiAuth.myTasks().subscribe({
-      next: (data) => success(data),
-      error: (res) => error(res)
-    });
+  myTasks(date: Date, success: Function, error: Function) {
+    return this.apiAuth
+      .myTasks(this.date.formatDateToServer(date))
+      .subscribe({
+        next: (data) => success(data),
+        error: (res) => error(res)
+      });
   }
 
   saveNoteTime(note: NoteTime, success: Function, error: Function) {
@@ -60,14 +62,16 @@ export class NoteTimeService {
       });
   }
 
-  deleteMany(note: NoteTime[], success: Function, error: Function){
-    let ids: number[] = note.map((item) => {return item.id});
+  deleteMany(note: NoteTime[], success: Function, error: Function) {
+    let ids: number[] = note.map((item) => {
+      return item.id
+    });
     this
       .apiAuth
       .deleteManyTasks(ids)
       .subscribe({
         next: (data) => success(data, note),
         error: (res) => error(res)
-    })
+      })
   }
 }

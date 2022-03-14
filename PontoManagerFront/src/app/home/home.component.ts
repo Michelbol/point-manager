@@ -68,8 +68,13 @@ export class HomeComponent implements OnInit {
     };
   }
 
+  changeActualDates(){
+    this.loadMyTasks();
+  }
+
   loadMyTasks() {
     this.noteTimeService.myTasks(
+      this.actualDates,
       (data: Array<NoteTimeResponseMapper>) => {
         this.dataSource = [];
         data.map((noteTimeResponse) => {

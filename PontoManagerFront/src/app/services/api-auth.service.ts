@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {NoteTimeRequestMapper} from "../home/models/NoteTimeRequestMapper";
 import {NoteTime} from "../home/models/NoteTime";
 
@@ -8,16 +8,21 @@ import {NoteTime} from "../home/models/NoteTime";
 })
 export class ApiAuthService {
 
-  private urlBase = 'http://localhost'
+  private urlBase = 'http://localhost:81'
 
   constructor(private http: HttpClient) {
 
   }
 
-  myTasks(){
-    return this.http.get(
-      `${this.urlBase}/note-time/today`
-    );
+  myTasks(date: null|string){
+    if(date !== null){
+      return this.http.get(
+        `${this.urlBase}/note-time`,
+        {
+          params: new HttpParams().set('date', date)
+        });
+      }
+    return this.http.get(`${this.urlBase}/note-time`);
   }
 
   createTask(note: NoteTimeRequestMapper){

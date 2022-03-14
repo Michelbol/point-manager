@@ -5,7 +5,7 @@
     (click)="removeSelectRows()"
   >Remover {{ selection.selected.length }} selecionada(s) </button>
   <mat-form-field class="actual-date" appearance="fill">
-    <input matInput [matDatepicker]="actualDate" [(ngModel)]="actualDates">
+    <input matInput [matDatepicker]="actualDate" [(ngModel)]="actualDates" (dateInput)="changeActualDates()" >
     <mat-datepicker-toggle matSuffix [for]="actualDate"></mat-datepicker-toggle>
     <mat-datepicker #actualDate></mat-datepicker>
   </mat-form-field>
