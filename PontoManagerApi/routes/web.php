@@ -27,9 +27,12 @@ $router->group(['middleware' => 'auth'], function(Router $router){
 //        $router->get('task/{id}', 'TaskController@findTask');
     });
 
-    $router->get('/note-time', 'NoteTimeController@list');
-    $router->post('/note-time', 'NoteTimeController@save');
-    $router->put('/note-time/{id}', 'NoteTimeController@update');
-    $router->delete('/note-time/many', 'NoteTimeController@deleteMany');
-    $router->delete('/note-time/{id}', 'NoteTimeController@delete');
+    $router->group(['prefix' => 'note-time'], function(Router $router){
+        $router->get('', 'NoteTimeController@list');
+        $router->post('', 'NoteTimeController@save');
+        $router->post('export', 'NoteTimeController@export');
+        $router->put('{id}', 'NoteTimeController@update');
+        $router->delete('many', 'NoteTimeController@deleteMany');
+        $router->delete('{id}', 'NoteTimeController@delete');
+    });
 });

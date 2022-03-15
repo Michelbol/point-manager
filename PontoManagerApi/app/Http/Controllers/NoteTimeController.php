@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\ValidationFillException;
+use App\Exports\NoteTimeExport;
+use App\Http\Controllers\Requests\NoteTimeRequest;
 use App\Http\Controllers\Responses\NoteTimeResponse;
 use App\Service\NoteTimeService;
 use Carbon\Carbon;
+use Excel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,29 +55,7 @@ class NoteTimeController extends Controller
 
     public function save(Request $request)
     {
-        $fields = $this->validate($request, [
-            'start_at' => [
-                'nullable',
-                'date_format:Y-m-d H:i'
-            ],
-            'end_at' => [
-                'nullable',
-                'date_format:Y-m-d H:i'
-            ],
-            'id_vsts' => [
-                'nullable',
-                'integer'
-            ],
-            'description' => [
-                'nullable',
-                'string',
-                'max:255'
-            ],
-            'id_task' => [
-                'nullable',
-                'integer'
-            ],
-        ]);
+        $fields = $this->validate($request, NoteTimeRequest::VALIDATIONS);
 
         if (empty($fields)) {
             return $this->validationResponse('Preencha pelo menos 1 dos campos');
@@ -91,29 +72,7 @@ class NoteTimeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $fields = $this->validate($request, [
-            'start_at' => [
-                'nullable',
-                'date_format:Y-m-d H:i'
-            ],
-            'end_at' => [
-                'nullable',
-                'date_format:Y-m-d H:i'
-            ],
-            'id_vsts' => [
-                'nullable',
-                'integer'
-            ],
-            'description' => [
-                'nullable',
-                'string',
-                'max:255'
-            ],
-            'id_task' => [
-                'nullable',
-                'integer'
-            ],
-        ]);
+        $fields = $this->validate($request, NoteTimeRequest::VALIDATIONS);
 
         if (empty($fields)) {
             return $this->validationResponse('Preencha pelo menos 1 dos campos');
@@ -148,5 +107,22 @@ class NoteTimeController extends Controller
             ]
         ]);
         $this->service->deleteMany($fields['ids']);
+    }
+
+    public function export(Request $request)
+    {
+        $fields = $this->validate($request, [
+            'start_at' => [
+                'nullable',
+                'date_format:Y-m-d'
+            ],
+            'end_at' => [
+                'nullable',
+                'date_format:Y-m-d'
+            ]
+        ]);
+//        $startAt = Carbon::createFromFormat('Y-m-d', $fields['start_at']);
+//        $endAt = Carbon::createFromFormat('Y-m-d', $fields['end_at']);
+        return Excel::download(new NoteTimeExport(), 'lançamentos.xlsx');
     }
 }
