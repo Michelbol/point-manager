@@ -27,13 +27,15 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { DialogComponent } from './dialog/dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {AuthInterceptor} from "./http-interceptors/auth-interceptor";
+import { ExportComponent } from './export/export.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HomeComponent,
-    DialogComponent
+    DialogComponent,
+    ExportComponent
   ],
   imports: [
     BrowserModule,

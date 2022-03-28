@@ -29,13 +29,25 @@ class NoteTimeController extends Controller
             'date' => [
                 'nullable',
                 'date_format:Y-m-d'
+            ],
+            'start_at' => [
+                'nullable',
+                'date_format:Y-m-d'
+            ],
+            'end_at' => [
+                'nullable',
+                'date_format:Y-m-d'
             ]
         ]);
         $startAt = Carbon::now();
         $endAt = Carbon::now();
-        if(isset($fields['date'])){
+        if (isset($fields['date'])) {
             $startAt = Carbon::createFromFormat('Y-m-d', $fields['date']);
             $endAt = Carbon::createFromFormat('Y-m-d', $fields['date']);
+        }
+        if(isset($fields['start_at']) && isset($fields['end_at'])){
+            $startAt = Carbon::createFromFormat('Y-m-d', $fields['start_at']);
+            $endAt = Carbon::createFromFormat('Y-m-d', $fields['end_at']);
         }
 
         $noteTimes = $this
@@ -46,7 +58,7 @@ class NoteTimeController extends Controller
                 Auth::user()
             );
         $response = [];
-        foreach ($noteTimes as $noteTime){
+        foreach ($noteTimes as $noteTime) {
             $response[] = (new NoteTimeResponse($noteTime))->toArray();
         }
 
@@ -111,18 +123,21 @@ class NoteTimeController extends Controller
 
     public function export(Request $request)
     {
-        $fields = $this->validate($request, [
-            'start_at' => [
-                'nullable',
-                'date_format:Y-m-d'
-            ],
-            'end_at' => [
-                'nullable',
-                'date_format:Y-m-d'
-            ]
-        ]);
-//        $startAt = Carbon::createFromFormat('Y-m-d', $fields['start_at']);
-//        $endAt = Carbon::createFromFormat('Y-m-d', $fields['end_at']);
-        return Excel::download(new NoteTimeExport(), 'lançamentos.xlsx');
+        $fields = $this->validate(
+            $request,
+            [
+                'start_at' => [
+                    'required',
+                    'date_format:Y-m-d'
+                ],
+                'end_at' => [
+                    'required',
+                    'date_format:Y-m-d'
+                ]
+            ]);
+        $startAt = Carbon::createFromFormat('Y-m-d', $fields['start_at'])->startOfDay();
+        $endAt = Carbon::createFromFormat('Y-m-d', $fields['end_at'])->endOfDay();
+        $name = "Lançamentos-".$startAt->format('Y-m-d')." a ".$endAt->format('Y-m-d').".xlsx";
+        return Excel::download(new NoteTimeExport($startAt, $endAt), $name);
     }
 }

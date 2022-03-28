@@ -24,6 +24,30 @@ export class NoteTimeService {
       });
   }
 
+  generateExcel(startAt: Date, endAt: Date, success: Function, error: Function){
+    return this.apiAuth
+      .generateExcel(
+        this.date.formatDateToServer(startAt),
+        this.date.formatDateToServer(endAt),
+      )
+      .subscribe({
+        next: (data) => success(data),
+        error: (res) => error(res)
+      });
+  }
+
+  listTaskByDate(startAt: Date, endAt: Date, success: Function, error: Function) {
+    return this.apiAuth
+      .listTaskByDate(
+        this.date.formatDateToServer(startAt),
+        this.date.formatDateToServer(endAt),
+      )
+      .subscribe({
+        next: (data) => success(data),
+        error: (res) => error(res)
+      });
+  }
+
   saveNoteTime(note: NoteTime, success: Function, error: Function) {
     const date = this.date.formatDateToServer(note.date.value);
     const mapperNote: NoteTimeRequestMapper = {

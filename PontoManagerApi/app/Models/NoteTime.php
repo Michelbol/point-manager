@@ -31,7 +31,7 @@ class NoteTime extends Model
     public function getStartAtAttribute($value)
     {
         if(isset($value) && is_string($value)){
-            return Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfMinute();
+            return Carbon::createFromFormat('Y-m-d H:i:s', $value);
         }
         return $value;
     }
@@ -39,7 +39,7 @@ class NoteTime extends Model
     public function getEndAtAttribute($value)
     {
         if(isset($value) && is_string($value)){
-            return Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfMinute();
+            return Carbon::createFromFormat('Y-m-d H:i:s', $value);
         }
         return $value;
     }

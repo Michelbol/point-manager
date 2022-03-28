@@ -5,7 +5,9 @@ namespace App\Task\Services;
 use App\Http\Controllers\Responses\AuthTaskResponse;
 use App\Repository\UserRepository;
 use App\Task\Requests\AuthTaskRequest;
+use App\Task\Requests\FindTaskByIdAndIdProjectRequest;
 use App\Task\Requests\GetTaskByUserTaskRequest;
+use App\Task\Responses\FindTaskByIdAndIdProjectResponse;
 
 class TaskService
 {
@@ -48,6 +50,18 @@ class TaskService
         );
 
         return $authResponse;
+    }
+
+    /**
+     * @param string $idProject
+     * @param int $idtask
+     * @return FindTaskByIdAndIdProjectResponse
+     */
+    public function findTaskByIdAndIdProject(string $idProject, int $idtask): FindTaskByIdAndIdProjectResponse
+    {
+        return app(TaskApiAuthService::class)->findTask(
+            new FindTaskByIdAndIdProjectRequest($idProject,$idtask)
+        );
     }
 
     public function getTasksLoggedUser()

@@ -30,7 +30,7 @@ export class DateService {
     let [year, month, day] = date.split("-");
     let [hour, min] = hours.split(":");
     let newDate = new Date();
-    newDate.setFullYear(Number(year), Number(month), Number(day));
+    newDate.setFullYear(Number(year), Number(month)-1, Number(day));
     newDate.setHours(Number(hour), Number(min));
     return newDate;
   }

@@ -49,6 +49,21 @@ class NoteTimeRepository
                 ->count() > 0;
     }
 
+    /**
+     * @param Carbon $startAt
+     * @param int $userId
+     * @param $except
+     * @return NoteTime|null
+     */
+    public function firstStartAtAndUser(Carbon $startAt, int $userId, $except = 0)
+    {
+        return NoteTime
+                ::where('start_at', $startAt)
+                ->whereUserId($userId)
+                ->where('id', '!=', $except)
+                ->first();
+    }
+
     public function existsEndAtAndUser(Carbon $endAt, int $userId, $except = 0): bool
     {
         return NoteTime
@@ -56,5 +71,13 @@ class NoteTimeRepository
                 ->whereUserId($userId)
                 ->where('id', '!=', $except)
                 ->count() > 0;
+    }
+
+    public function updateByIdVsts(int $idVsts, int $idTask)
+    {
+        NoteTime
+            ::whereIdVsts($idVsts)
+            ->where('id_task', 0)
+            ->update(['id_task' => $idTask]);
     }
 }

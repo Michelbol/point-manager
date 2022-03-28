@@ -84,7 +84,7 @@ export class HomeComponent implements OnInit {
             id: noteTimeResponse.id,
             id_vsts: this.newEditableFieldNumber(noteTimeResponse.id_vsts),
             id_task: this.newEditableFieldNumber(noteTimeResponse.id_task),
-            date: this.newEditableFieldDate(new Date()),
+            date: this.newEditableFieldDate(startAt),
             start_at: this.newEditableFieldTime(startAt),
             end_at: this.newEditableFieldTime(endAt),
             interval: new Date(),
@@ -217,6 +217,7 @@ export class HomeComponent implements OnInit {
           item.value = this.dateService.formatStringToDateTime(item.string);
           this.calcInterval(note);
         }
+        this.loadMyTasks();
       },
       ({error}: any) => {
         this.dialogService.open("Erro", error.message);

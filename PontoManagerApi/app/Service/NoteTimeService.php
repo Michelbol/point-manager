@@ -8,15 +8,17 @@ use App\Models\User;
 use App\Repository\NoteTimeRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Validation\ValidationException;
 
 class NoteTimeService
 {
     private $repository;
 
-    public function __construct(NoteTimeRepository $repository)
+    private $taskService;
+
+    public function __construct(NoteTimeRepository $repository, TaskService $taskService)
     {
         $this->repository = $repository;
+        $this->taskService = $taskService;
     }
 
     public function listByDate(Carbon $startAt, Carbon $endAt, User $user)
@@ -54,6 +56,12 @@ class NoteTimeService
     {
         $model->id_vsts = $data['id_vsts'] ?? null;
         $model->id_task = $data['id_task'] ?? null;
+        if(isset($model->id_task) && $model->id_task > 0){
+            $task = $this->taskService->findOrCreate($model->id_task);
+            if(isset($task) && isset($model->id_vsts) && $model->id_vsts > 0){
+                $this->updateIdTaskByIdVsts($model->id_vsts, $task->id);
+            }
+        }
         $model->sync_at = $data['sync_at'] ?? null;
         $model->description = $data['description'] ?? null;
         $model->user_id = $data['user_id'];
@@ -74,6 +82,11 @@ class NoteTimeService
     {
         if($this->repository->existsEndAtAndUser($model->start_at, $model->user_id, $model->id)){
             $model->start_at->addSecond();
+        }
+        if($this->repository->existsStartAtAndUser($model->end_at, $model->user_id, $model->id)){
+            $noteTime = $this->repository->firstStartAtAndUser($model->end_at, $model->user_id, $model->id);
+            $noteTime->start_at = $noteTime->start_at->addSecond();
+            $noteTime->save();
         }
     }
 
@@ -115,17 +128,22 @@ class NoteTimeService
     private function isUnique($model){
         if(isset($model->start_at) && isset($model->end_at)){
             if($this->repository->existsByRangeAndUser($model->start_at, $model->end_at, $model->user_id, $model->id)){
-                throw new ValidationFillException('Já existe um lançamento para o horário informado');
+                throw new ValidationFillException('Já existe um lançamento para o período informado');
             }
         }else if(isset($model->start_at)){
             if($this->repository->existsStartAtAndUser($model->start_at, $model->user_id, $model->id)){
-                throw new ValidationFillException('Já existe um lançamento para o horário informado');
+                throw new ValidationFillException('Já existe um lançamento com esse horário de inicio');
             }
         }
         else if(isset($model->end_at)){
             if($this->repository->existsEndAtAndUser($model->end_at, $model->user_id, $model->id)){
-                throw new ValidationFillException('Já existe um lançamento para o horário informado');
+                throw new ValidationFillException('Já existe um lançamento com esse horário de término');
             }
         }
+    }
+
+    public function updateIdTaskByIdVsts(int $idVsts, int $idTask)
+    {
+        $this->repository->updateByIdVsts($idVsts, $idTask);
     }
 }
