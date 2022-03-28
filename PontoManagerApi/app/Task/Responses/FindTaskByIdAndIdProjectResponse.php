@@ -61,8 +61,8 @@ class FindTaskByIdAndIdProjectResponse
 
     public function __construct(array $response)
     {
-        $this->dsTarefa = $response['Ds_Tarefa'];;
-        $this->cdEquipe = $response['Cd_Equipe'];;
+        $this->dsTarefa = $response['Ds_Tarefa'];
+        $this->cdEquipe = $response['Cd_Equipe'];
         $this->triagemList = [];
         foreach ($response['TriagemList'] as $triagem){
             $this->triagemList[] = new FindTaskByIdAndIdProjectTriagemListResponse($triagem['Cd_Tipotarefa']);

@@ -126,7 +126,7 @@ class GetTaskByUserTaskResponse
                 $execucao['Dh_Termino'],
                 $execucao['Inf_Compl'],
                 $execucao['Dh_Inicio'],
-                $execucao['Cd_Projeto'],
+                $execucao['Cd_Projeto']
             );
         }
         $this->dtRelease = $dtRelease;
