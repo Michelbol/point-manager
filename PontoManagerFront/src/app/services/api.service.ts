@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {NoteTime} from "../home/models/NoteTime";
 
 @Injectable({
   providedIn: 'root'

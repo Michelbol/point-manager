@@ -60,6 +60,7 @@ class NoteTimeService
             $task = $this->taskService->findOrCreate($model->id_task);
             if(isset($task) && isset($model->id_vsts) && $model->id_vsts > 0){
                 $this->updateIdTaskByIdVsts($model->id_vsts, $task->id);
+                $this->taskService->updateIdVsts($task, (int)$model->id_vsts);
             }
         }
         $model->sync_at = $data['sync_at'] ?? null;

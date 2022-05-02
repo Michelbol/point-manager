@@ -100,7 +100,7 @@ $app->configure('task');
  $app->register('Maatwebsite\Excel\ExcelServiceProvider');
  $app->register(FactoryTaskProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+ $app->register(App\Providers\AppServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

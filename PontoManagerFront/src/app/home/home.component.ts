@@ -7,6 +7,7 @@ import {NoteTimeFactory} from "./models/NoteTimeFactory";
 import {NoteTimeService} from "../services/note-time.service";
 import {DialogService} from "../services/dialog.service";
 import {NoteTimeResponseMapper} from "./models/NoteTimeResponseMapper";
+import {LoadingService} from "../services/loading.service";
 
 @Component({
   selector: 'app-home',
@@ -27,6 +28,7 @@ export class HomeComponent implements OnInit {
     private noteTimeFactory: NoteTimeFactory,
     private noteTimeService: NoteTimeService,
     private dialogService: DialogService,
+    private loading: LoadingService
   ) {
   }
 
@@ -73,6 +75,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadMyTasks() {
+    this.loading.show();
     this.noteTimeService.myTasks(
       this.actualDates,
       (data: Array<NoteTimeResponseMapper>) => {
@@ -93,14 +96,17 @@ export class HomeComponent implements OnInit {
           this.calcInterval(note);
           this.newTableRow(note);
         })
+        this.loading.hide();
       },
       (error: any) => {
+        this.loading.hide();
         this.dialogService.open('Erro', error.message);
       }
     );
   }
 
   newRow() {
+    this.loading.show();
     let note = this.noteTimeFactory.create(this.dataSource.length, this.actualDates);
     this.calcInterval(note);
     this.noteTimeService.saveNoteTime(
@@ -108,8 +114,10 @@ export class HomeComponent implements OnInit {
       ({data}: any, note: NoteTime) => {
         note.id = data.id;
         this.newTableRow(note);
+        this.loading.hide();
       },
       ({error}: any) => {
+        this.loading.hide();
         this.dialogService.open('Erro', error.message);
       });
   }
@@ -123,6 +131,7 @@ export class HomeComponent implements OnInit {
     if(this.selection.selected.length === 0){
       return;
     }
+    this.loading.show();
     this
       .noteTimeService
       .deleteMany(
@@ -133,8 +142,10 @@ export class HomeComponent implements OnInit {
           }
           this.selection.clear();
           this.table.renderRows();
+          this.loading.hide();
         },
         ({error}: any) => {
+          this.loading.hide();
           this.dialogService.open('Erro', error.message);
         });
   }
@@ -205,9 +216,11 @@ export class HomeComponent implements OnInit {
   }
 
   saveInput(item: any, note: NoteTime) {
+    this.loading.show();
     this.noteTimeService.updateNoteTime(
       note,
       (date: any) => {
+        this.loading.hide();
         item.editable = false;
         if (typeof this.oldValue === "number" && item.value === null) {
           item.value = 0;
@@ -220,6 +233,7 @@ export class HomeComponent implements OnInit {
         this.loadMyTasks();
       },
       ({error}: any) => {
+        this.loading.hide();
         this.dialogService.open("Erro", error.message);
       }
     );

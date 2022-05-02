@@ -51,10 +51,26 @@ class TaskService
         return $this->repository->findById($id);
     }
 
+    /**
+     * @param int $id
+     * @return Task|null
+     */
+    public function findByVsts(int $id)
+    {
+        return $this->repository->findByIdVsts($id);
+    }
+
     public function save(array $data): Task
     {
         $model = new Task();
         $model = $this->fill($data, $model);
+        $model->save();
+        return $model;
+    }
+
+    public function updateIdVsts(Task $model, int $idVsts)
+    {
+        $model->id_vsts = $idVsts;
         $model->save();
         return $model;
     }

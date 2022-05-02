@@ -18,4 +18,13 @@ class TaskRepository
         }
         return Task::findOrFail($id);
     }
+
+    /**
+     * @param int $id
+     * @return Task|null
+     */
+    public function findByIdVsts(int $id): ?Task
+    {
+        return Task::whereIdVsts($id)->first();
+    }
 }

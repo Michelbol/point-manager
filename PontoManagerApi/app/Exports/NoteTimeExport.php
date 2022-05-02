@@ -30,6 +30,7 @@ class NoteTimeExport implements FromCollection, WithHeadings, WithMapping
         return NoteTime
             ::join('tasks', 'tasks.id', 'note_times.id_task')
             ->whereBetween('note_times.start_at', [$this->startAt, $this->endAt])
+            ->orderBy('note_times.start_at')
             ->get([
                 'note_times.id_task',
                 'note_times.start_at',
@@ -52,8 +53,8 @@ class NoteTimeExport implements FromCollection, WithHeadings, WithMapping
             $noteTime->id_project,
             $noteTime->id_task,
             Auth::user()->username,
-            $noteTime->start_at->format('d/m/Y h:i:s'),
-            $noteTime->end_at->format('d/m/Y h:i:s'),
+            $noteTime->start_at->format('d/m/Y H:i:s'),
+            $noteTime->end_at->format('d/m/Y H:i:s'),
             1,
             null,
             $noteTime->id_task_type,

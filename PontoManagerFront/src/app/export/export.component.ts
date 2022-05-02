@@ -5,6 +5,7 @@ import {NoteTimeResponseMapper} from "../home/models/NoteTimeResponseMapper";
 import {NoteTimeService} from "../services/note-time.service";
 import {MatTable} from "@angular/material/table";
 import {DialogService} from "../services/dialog.service";
+import {LoadingService} from "../services/loading.service";
 
 @Component({
   selector: 'app-export',
@@ -24,6 +25,7 @@ export class ExportComponent implements OnInit {
     public dateService: DateService,
     private noteTimeService: NoteTimeService,
     private dialogService: DialogService,
+    private loading: LoadingService
     ) {
     this.endAt = new Date();
     this.endAt = this.addMonthDate(this.endAt);
@@ -33,6 +35,7 @@ export class ExportComponent implements OnInit {
   }
 
   generateExcel(){
+    this.loading.show();
     this.noteTimeService.generateExcel(
       this.startAt,
       this.endAt,
@@ -42,14 +45,17 @@ export class ExportComponent implements OnInit {
         a.download = fileName;
         a.href = window.URL.createObjectURL(data);
         a.click();
+        this.loading.hide();
       },
       (error: any) => {
+        this.loading.hide();
         this.dialogService.open('Erro', error.message);
       }
     );
   }
 
   loadScreen(){
+    this.loading.show();
     this.noteTimeService.listTaskByDate(
       this.startAt,
       this.endAt,
@@ -70,10 +76,12 @@ export class ExportComponent implements OnInit {
           };
           this.calcInterval(note);
           this.newTableRow(note);
+          this.loading.hide();
         })
         this.isLoad = true;
       },
       (error: any) => {
+        this.loading.hide();
         this.dialogService.open('Erro', error.message);
       }
     );

@@ -18,7 +18,7 @@ class CreateTasksTable extends Migration
             $table->integer('id_task_type');
             $table->integer('id_team');
             $table->string('id_project');
-            $table->string('id_vsts');
+            $table->string('id_vsts')->nullable();
             $table->timestamps();
         });
     }
