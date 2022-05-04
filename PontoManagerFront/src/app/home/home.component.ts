@@ -113,6 +113,7 @@ export class HomeComponent implements OnInit {
 
   openModalNewDateTime(){
     this.modalData = this.noteTimeFactory.create(this.dataSource.length, this.actualDates);
+    this.calcIntervalModal();
     this.openModal();
   }
 
