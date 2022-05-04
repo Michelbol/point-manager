@@ -140,9 +140,9 @@ class NoteTimeService
         }
     }
 
-    private function updateBySimilarity(int $idVsts, int $idTask)
+    private function updateBySimilarity(int $idVsts, int $idTask, int $userId)
     {
-        $this->repository->updateByIdVsts($idVsts, $idTask);
+        $this->repository->updateByIdVsts($idVsts, $idTask, $userId);
     }
 
     private function updateAllTasksWithSameIdVsts(NoteTime $model): void
@@ -152,7 +152,7 @@ class NoteTimeService
             return;
         }
         if($model->isVstsFill()){
-            $this->updateBySimilarity($model->id_vsts, $task->id);
+            $this->updateBySimilarity($model->id_vsts, $task->id, $model->user_id);
             $this->updateIdVstsOfTaskFound((int) $model->id_vsts, $task);
         }
     }

@@ -74,11 +74,12 @@ class NoteTimeRepository
                 ->count() > 0;
     }
 
-    public function updateByIdVsts(int $idVsts, int $idTask)
+    public function updateByIdVsts(int $idVsts, int $idTask, int $userId)
     {
         NoteTime
             ::whereIdVsts($idVsts)
             ->where('id_task', 0)
+            ->whereUserId($userId)
             ->update(['id_task' => $idTask]);
     }
 }
