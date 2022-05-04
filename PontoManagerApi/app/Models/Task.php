@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
+
 /**
  * App\Models\Task
  *
@@ -16,10 +17,14 @@ use Illuminate\Support\Carbon;
  * @property string|null $id_vsts
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property int $estimated_time
+ * @property string|null $code_area
  * @method static Builder|Task newModelQuery()
  * @method static Builder|Task newQuery()
  * @method static Builder|Task query()
+ * @method static Builder|Task whereCodeArea($value)
  * @method static Builder|Task whereCreatedAt($value)
+ * @method static Builder|Task whereEstimatedTime($value)
  * @method static Builder|Task whereId($value)
  * @method static Builder|Task whereIdProject($value)
  * @method static Builder|Task whereIdTaskType($value)
@@ -42,5 +47,7 @@ class Task extends Model
         'id_team',
         'id_project',
         'id_vsts',
+        'code_area',
+        'estimated_time',
     ];
 }

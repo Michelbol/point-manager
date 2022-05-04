@@ -24,13 +24,16 @@ class FactoryTaskProvider extends ServiceProvider
         $this->app->when(TaskApiService::class)
             ->needs(WebServiceClientInterface::class)
             ->give(function(){
-                return new WebServiceTaskClient(HttpClientFactory::createClient());
+                return new WebServiceTaskClient((new HttpClientFactory())->createClient());
             });
 
         $this->app->when(TaskApiAuthService::class)
             ->needs(WebServiceClientInterface::class)
             ->give(function(){
-                return new WebServiceTaskAuthClient(HttpClientAuthFactory::createClient());
+                return new WebServiceTaskAuthClient(
+                    (new HttpClientAuthFactory(\Auth::user()))
+                        ->createClient()
+                );
             });
     }
 }

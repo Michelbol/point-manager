@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Exceptions\ValidationFillException;
 use App\Models\NoteTime;
+use App\Models\Task;
 use App\Models\User;
 use App\Repository\NoteTimeRepository;
 use Carbon\Carbon;
@@ -47,21 +48,17 @@ class NoteTimeService
     }
 
     /**
-     * @param array $data
-     * @param $model
-     * @return mixed
      * @throws ValidationFillException
      */
-    public function fill(array $data, $model)
+    private function fill(array $data, NoteTime $model): NoteTime
     {
         $model->id_vsts = $data['id_vsts'] ?? null;
         $model->id_task = $data['id_task'] ?? null;
-        if(isset($model->id_task) && $model->id_task > 0){
-            $task = $this->taskService->findOrCreate($model->id_task);
-            if(isset($task) && isset($model->id_vsts) && $model->id_vsts > 0){
-                $this->updateIdTaskByIdVsts($model->id_vsts, $task->id);
-                $this->taskService->updateIdVsts($task, (int)$model->id_vsts);
-            }
+        if($model->isTaskFill()){
+            $this->updateAllTasksWithSameIdVsts($model);
+        }
+        if($model->isVstsFill() && !$model->isTaskFill()){
+            $model->id_task = $this->findTaskByVsts($model->id_vsts);
         }
         $model->sync_at = $data['sync_at'] ?? null;
         $model->description = $data['description'] ?? null;
@@ -79,7 +76,7 @@ class NoteTimeService
         return $model;
     }
 
-    public function fixSecond($model)
+    private function fixSecond($model)
     {
         if($this->repository->existsEndAtAndUser($model->start_at, $model->user_id, $model->id)){
             $model->start_at->addSecond();
@@ -143,8 +140,41 @@ class NoteTimeService
         }
     }
 
-    public function updateIdTaskByIdVsts(int $idVsts, int $idTask)
+    private function updateBySimilarity(int $idVsts, int $idTask)
     {
         $this->repository->updateByIdVsts($idVsts, $idTask);
+    }
+
+    private function updateAllTasksWithSameIdVsts(NoteTime $model): void
+    {
+        $task = $this->taskService->findOrCreate($model->id_task);
+        if (!isset($task)) {
+            return;
+        }
+        if($model->isVstsFill()){
+            $this->updateBySimilarity($model->id_vsts, $task->id);
+            $this->updateIdVstsOfTaskFound((int) $model->id_vsts, $task);
+        }
+    }
+
+    /**
+     * @param int $idVsts
+     * @param Task $task
+     * @return void
+     */
+    private function updateIdVstsOfTaskFound(int $idVsts, Task $task): void
+    {
+        if ((int)$task->id_vsts !== $idVsts) {
+            $this->taskService->updateIdVsts($task, $idVsts);
+        }
+    }
+
+    private function findTaskByVsts(int $idVsts): int
+    {
+        $task = $this->taskService->findByVsts($idVsts);
+        if($task){
+            return $task->id;
+        }
+        return 0;
     }
 }

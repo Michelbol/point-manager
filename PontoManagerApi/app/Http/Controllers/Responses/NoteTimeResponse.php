@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Responses;
 
 
 use App\Models\NoteTime;
+use App\Models\Task;
 
 class NoteTimeResponse implements ResponseInterface
 {
@@ -21,10 +22,13 @@ class NoteTimeResponse implements ResponseInterface
 
     private $description;
 
-    /**
-     * @param NoteTime $model
-     */
-    public function __construct(NoteTime $model)
+    private $codeArea;
+
+    private $estimatedTime;
+
+    private $idTaskType;
+
+    public function __construct(NoteTime $model, ?Task $task = null)
     {
         $this->id = $model->id;
         $this->id_vsts = $model->id_vsts;
@@ -33,6 +37,11 @@ class NoteTimeResponse implements ResponseInterface
         $this->end_at = $model->end_at;
         $this->sync_at = $model->sync_at;
         $this->description = $model->description;
+        if(isset($task)){
+            $this->codeArea = $task->code_area;
+            $this->estimatedTime = $task->estimated_time;
+            $this->idTaskType = $task->id_task_type;
+        }
     }
 
 
@@ -46,6 +55,11 @@ class NoteTimeResponse implements ResponseInterface
             'end_at' => isset($this->end_at) ? $this->end_at->format('Y-m-d H:i') : null,
             'sync_at' => isset($this->sync_at) ? $this->sync_at->format('Y-m-d H:i') : null,
             'description' => $this->description,
+            'task' => [
+                'codeArea' => $this->codeArea,
+                'estimatedTime' => $this->estimatedTime,
+                'idTaskType' => $this->idTaskType,
+            ]
         ];
     }
 }

@@ -28,6 +28,7 @@ class NoteTimeRepository
             ->whereUserId($userId)
             ->where('id', '!=', $except)
             ->orderBy('start_at')
+            ->with('task')
             ->get();
     }
 

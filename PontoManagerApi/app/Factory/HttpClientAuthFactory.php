@@ -2,18 +2,24 @@
 
 namespace App\Factory;
 
+use App\Models\User;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Auth;
 
 class HttpClientAuthFactory implements HttpClientFactoryInterface
 {
-    public static function createClient(): Client
+    private $user;
+
+    public function __construct(User $user)
     {
-        $user = Auth::user();
+        $this->user = $user;
+    }
+
+    public function createClient(): Client
+    {
         return new Client([
             'base_uri' => config('task.url'),
             'headers' => [
-                'Authorization' => "Bearer $user->task_token"
+                'Authorization' => "Bearer {$this->user->task_token}"
             ]
         ]);
     }

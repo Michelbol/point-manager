@@ -6,5 +6,5 @@ use GuzzleHttp\Client;
 
 interface HttpClientFactoryInterface
 {
-    static function createClient(): Client;
+    public function createClient(): Client;
 }

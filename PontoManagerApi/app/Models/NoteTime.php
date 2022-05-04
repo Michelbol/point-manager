@@ -58,6 +58,11 @@ class NoteTime extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function task()
+    {
+        return $this->belongsTo(Task::class, 'id_task', 'id');
+    }
+
     public function getStartAtAttribute($value)
     {
         if(isset($value) && is_string($value)){
@@ -72,5 +77,15 @@ class NoteTime extends Model
             return Carbon::createFromFormat('Y-m-d H:i:s', $value);
         }
         return $value;
+    }
+
+    public function isTaskFill(): bool
+    {
+        return isset($this->id_task) && $this->id_task > 0;
+    }
+
+    public function isVstsFill(): bool
+    {
+        return isset($this->id_vsts) && $this->id_vsts > 0;
     }
 }

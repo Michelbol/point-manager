@@ -2,7 +2,9 @@
 
 namespace App\Task\Responses;
 
-class FindTaskByIdAndIdProjectResponse
+use Illuminate\Contracts\Support\Arrayable;
+
+class FindTaskByIdAndIdProjectResponse implements Arrayable
 {
 
     private $dsTarefa;
@@ -11,36 +13,16 @@ class FindTaskByIdAndIdProjectResponse
 
     private $triagemList;
 
-    /**
-     * @return mixed
-     */
-    public function getDsTarefa()
-    {
-        return $this->dsTarefa;
-    }
+    private $tmpPrevisto;
 
-    /**
-     * @param mixed $dsTarefa
-     */
-    public function setDsTarefa($dsTarefa): void
-    {
-        $this->dsTarefa = $dsTarefa;
-    }
+    private $cdArea;
 
     /**
      * @return mixed
      */
-    public function getCdEquipe()
+    public function cdEquipe()
     {
         return $this->cdEquipe;
-    }
-
-    /**
-     * @param mixed $cdEquipe
-     */
-    public function setCdEquipe($cdEquipe): void
-    {
-        $this->cdEquipe = $cdEquipe;
     }
 
     /**
@@ -51,18 +33,27 @@ class FindTaskByIdAndIdProjectResponse
         return $this->triagemList;
     }
 
-    /**
-     * @param array $triagemList
-     */
-    public function setTriagemList(array $triagemList): void
+    public function tipoDaPrimeiraTriagem()
     {
-        $this->triagemList = $triagemList;
+        return $this->getTriagemList()[0]->getCdTipoTarefa();
+    }
+
+    public function codeArea()
+    {
+        return $this->cdArea;
+    }
+
+    public function tmpPrevisto()
+    {
+        return $this->tmpPrevisto;
     }
 
     public function __construct(array $response)
     {
         $this->dsTarefa = $response['Ds_Tarefa'];
         $this->cdEquipe = $response['Cd_Equipe'];
+        $this->tmpPrevisto = $response['Tmp_Previsto'];
+        $this->cdArea = $response['Cd_Area'];
         $this->triagemList = [];
         foreach ($response['TriagemList'] as $triagem){
             $this->triagemList[] = new FindTaskByIdAndIdProjectTriagemListResponse($triagem['Cd_Tipotarefa']);
@@ -75,7 +66,9 @@ class FindTaskByIdAndIdProjectResponse
         return [
             'dsTarefa' => $this->dsTarefa,
             'cdEquipe' => $this->cdEquipe,
-            'triagemList' => $this->triagemList
+            'triagemList' => $this->triagemList,
+            'tmpPrevisto' => $this->tmpPrevisto,
+            'cdArea' => $this->cdArea,
         ];
     }
 }

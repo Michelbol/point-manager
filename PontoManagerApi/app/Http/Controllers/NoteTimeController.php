@@ -59,7 +59,7 @@ class NoteTimeController extends Controller
             );
         $response = [];
         foreach ($noteTimes as $noteTime) {
-            $response[] = (new NoteTimeResponse($noteTime))->toArray();
+            $response[] = (new NoteTimeResponse($noteTime, $noteTime->task))->toArray();
         }
 
         return $response;

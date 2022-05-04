@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 
 class HttpClientFactory implements HttpClientFactoryInterface
 {
-    public static function createClient(): Client
+    public function createClient(): Client
     {
         return new Client([
             'base_uri' => config('task.url')
