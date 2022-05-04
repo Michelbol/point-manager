@@ -239,24 +239,56 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  calcTotalInterval() {
+  calcTotalIntervalBase(callbackReduce: any){
     let totalHours = new Date();
     totalHours.setHours(0, 0, 0, 0);
-    totalHours = this.dataSource.reduce((sum, item) => {
-      sum.setHours(
-        sum.getHours() + item.interval.getHours(),
-        sum.getMinutes() + item.interval.getMinutes()
-      );
-      return sum;
-    }, totalHours)
+    totalHours = this.dataSource.reduce(callbackReduce, totalHours)
     return this.dateService.formatTime(totalHours);
   }
 
+  callbackTotalInterval(sum: Date, item: NoteTime) {
+    sum.setHours(
+      sum.getHours() + item.interval.getHours(),
+      sum.getMinutes() + item.interval.getMinutes()
+    );
+    return sum;
+  }
+
+  callbackVstsTotal(sum: Date, item: NoteTime) {
+    if(item.id_vsts.value == 0){
+      return sum;
+    }
+    sum.setHours(
+      sum.getHours() + item.interval.getHours(),
+      sum.getMinutes() + item.interval.getMinutes()
+    );
+    return sum;
+  }
+
+  callbackTaskTotal(sum: Date, item: NoteTime) {
+    if(item.id_task.value == 0){
+      return sum;
+    }
+    sum.setHours(
+      sum.getHours() + item.interval.getHours(),
+      sum.getMinutes() + item.interval.getMinutes()
+    );
+    return sum;
+  }
+
+  calcTotalInterval() {
+    return this.calcTotalIntervalBase(this.callbackTotalInterval);
+  }
+
+  calcTotalIntervalVsts() {
+    return this.calcTotalIntervalBase(this.callbackVstsTotal);
+  }
+
+  calcTotalIntervalTask() {
+    return this.calcTotalIntervalBase(this.callbackTaskTotal);
+  }
+
   calcInterval(note: NoteTime) {
-    let hours = note.end_at.value.getHours() - note.start_at.value.getHours();
-    let minutes = note.end_at.value.getMinutes() - note.start_at.value.getMinutes();
-    let result = new Date();
-    result.setHours(hours, minutes);
-    note.interval = result;
+    note.interval = this.dateService.calcInterval(note.start_at.value, note.end_at.value);
   }
 }

@@ -1,0 +1,121 @@
+<div>
+  <div class="header">
+    <mat-form-field class="actual-date" appearance="fill">
+      <input matInput [matDatepicker]="startAtField" [(ngModel)]="startAt">
+      <mat-datepicker-toggle matSuffix [for]="startAtField"></mat-datepicker-toggle>
+      <mat-datepicker #startAtField></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="actual-date" appearance="fill">
+      <input matInput [matDatepicker]="endAtField" [(ngModel)]="endAt">
+      <mat-datepicker-toggle matSuffix [for]="endAtField"></mat-datepicker-toggle>
+      <mat-datepicker #endAtField></mat-datepicker>
+    </mat-form-field>
+
+    <button
+      class="btn-remove-row"
+      mat-raised-button
+      (click)="loadScreen()"
+    >Carregar
+    </button>
+  </div>
+  <div class="cards">
+    <mat-card *ngIf="true" class="card-dash">
+      <mat-card-title>Horas não Faturadas</mat-card-title>
+      <mat-card-content>{{ notBillablePercent }}%</mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="true" class="card-dash">
+      <mat-card-title>Horas Task</mat-card-title>
+      <mat-card-content>{{ totalHoursTask }}</mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="true" class="card-dash">
+      <mat-card-title>Horas Vsts</mat-card-title>
+      <mat-card-content>{{ totalHoursVsts }}</mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="true" class="card-dash">
+      <mat-card-title>Horas Para Lançar</mat-card-title>
+      <mat-card-content>{{ totalEmptyHours }}</mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="true" class="card-dash">
+      <mat-card-title>Horas Ociosas</mat-card-title>
+      <mat-card-content>{{ totalIdleHours }}</mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="true" class="card-dash">
+      <mat-card-title>IPT</mat-card-title>
+      <mat-card-content>00:00</mat-card-content>
+    </mat-card>
+  </div>
+  <table mat-table [dataSource]="dataSource" *ngIf="true" class="mat-elevation-z8">
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <ng-container matColumnDef="id_vsts">
+      <th mat-header-cell *matHeaderCellDef> Id Vsts.</th>
+      <td mat-cell *matCellDef="let element" [class.wrong]="element.id_vsts == 0">
+        <span>{{element.id_vsts}}</span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Descrição.</th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{element.description}}</span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="id_task">
+      <th mat-header-cell *matHeaderCellDef> Id Task</th>
+      <td mat-cell *matCellDef="let element" [class.wrong]="element.id_task == 0">
+        <span>{{element.id_task}}</span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Data</th>
+      <td mat-cell *matCellDef="let element">
+        <span>
+          {{dateService.formatDate(element.date)}}
+        </span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="start_at">
+      <th mat-header-cell *matHeaderCellDef> Inicio</th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{dateService.formatTime(element.start_at)}}</span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="end_at">
+      <th mat-header-cell *matHeaderCellDef> Fim</th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{dateService.formatTime(element.end_at)}}</span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="interval">
+      <th mat-header-cell *matHeaderCellDef> Intervalo</th>
+      <td mat-cell *matCellDef="let element"> {{dateService.formatTime(element.interval)}} </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="estimated_time">
+      <th mat-header-cell *matHeaderCellDef> Estimativa</th>
+      <td mat-cell *matCellDef="let element"> {{element.task.estimated_time}} </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+
+  </table>
+</div>

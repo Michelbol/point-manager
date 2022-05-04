@@ -28,6 +28,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {AuthInterceptor} from "./http-interceptors/auth-interceptor";
 import { ExportComponent } from './export/export.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ExportComponent } from './export/export.component';
     LoginComponent,
     HomeComponent,
     DialogComponent,
-    ExportComponent
+    ExportComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

@@ -76,8 +76,8 @@ export class ExportComponent implements OnInit {
           };
           this.calcInterval(note);
           this.newTableRow(note);
-          this.loading.hide();
         })
+        this.loading.hide();
         this.isLoad = true;
       },
       (error: any) => {
@@ -86,16 +86,13 @@ export class ExportComponent implements OnInit {
       }
     );
   }
+
   newTableRow(note: NoteTime) {
     this.dataSource.push(note);
   }
 
   calcInterval(note: NoteTime) {
-    let hours = note.end_at.getHours() - note.start_at.getHours();
-    let minutes = note.end_at.getMinutes() - note.start_at.getMinutes();
-    let result = new Date();
-    result.setHours(hours, minutes);
-    note.interval = result;
+    note.interval = this.dateService.calcInterval(note.start_at, note.end_at);
   }
 
   addMonthDate(date: Date){

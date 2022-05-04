@@ -4,7 +4,11 @@
 <p>
   <mat-toolbar color="primary">
     <span><a href="/home">Gerenciador de Ponto</a></span>
-    <a mat-button href="/export">Exportação</a>
+    <a mat-button href="/home" *ngIf="isLogged()">Horas</a>
+    <a mat-button href="/export" *ngIf="isLogged()">Exportação</a>
+    <a mat-button href="/dashboard" *ngIf="isLogged()">Dashboard</a>
+    <span class="spacer"></span>
+    <a mat-button (click)="this.authService.logout()" *ngIf="isLogged()">Logout</a>
   </mat-toolbar>
 </p>
 <router-outlet></router-outlet>

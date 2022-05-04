@@ -1,3 +1,5 @@
+import {CodeAreaEnum} from "../../enums/codeArea.enum";
+
 export interface NoteTimeResponseMapper {
   id: number,
   id_vsts: number,
@@ -8,4 +10,9 @@ export interface NoteTimeResponseMapper {
   created_at: string
   updated_at: string|null,
   description: string|null
+  task: {
+    estimatedTime: number,
+    idTaskType: number,
+    codeArea: CodeAreaEnum
+  }
 }

@@ -46,7 +46,7 @@
         <span *ngIf="!element.id_vsts.editable">{{element.id_vsts.value}}</span>
 
         <mat-form-field appearance="fill" *ngIf="element.id_vsts.editable">
-          <mat-label>Usuário</mat-label>
+          <mat-label>Id Vsts</mat-label>
           <input type="number" matInput [(ngModel)]="element.id_vsts.value">
           <button mat-icon-button matSuffix color="primary" aria-label="" (click)="saveInput(element.id_vsts, element)">
             <mat-icon>check</mat-icon>
@@ -83,7 +83,7 @@
       <td mat-cell *matCellDef="let element" (dblclick)="showInput(element.id_task)">
         <span *ngIf="!element.id_task.editable">{{element.id_task.value}}</span>
         <mat-form-field appearance="fill" *ngIf="element.id_task.editable">
-          <mat-label>Usuário</mat-label>
+          <mat-label>Id Task</mat-label>
           <input matInput [(ngModel)]="element.id_task.value">
           <button mat-icon-button matSuffix color="primary" aria-label="" (click)="saveInput(element.id_task, element)">
             <mat-icon>check</mat-icon>
@@ -114,7 +114,7 @@
           <mat-datepicker #data></mat-datepicker>
         </mat-form-field>
       </td>
-      <td mat-footer-cell *matFooterCellDef></td>
+      <td mat-footer-cell *matFooterCellDef>Total VSTS: {{ calcTotalIntervalVsts() }}</td>
     </ng-container>
 
     <ng-container matColumnDef="start_at">
@@ -131,7 +131,7 @@
             </button>
           </div>
       </td>
-      <td mat-footer-cell *matFooterCellDef></td>
+      <td mat-footer-cell *matFooterCellDef>Total Task: {{ calcTotalIntervalTask() }}</td>
     </ng-container>
 
     <ng-container matColumnDef="end_at">

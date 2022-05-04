@@ -58,4 +58,12 @@ export class DateService {
   formatDateTime(date: Date){
     return this.formatDateToString(date, DATE_TIME_DEFAULT);
   }
+
+  calcInterval(startDate: Date, endDate: Date){
+    let hours = endDate.getHours() - startDate.getHours();
+    let minutes = endDate.getMinutes() - startDate.getMinutes();
+    let result = new Date();
+    result.setHours(hours, minutes);
+    return result;
+  }
 }
