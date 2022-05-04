@@ -8,6 +8,7 @@ import {NoteTimeService} from "../services/note-time.service";
 import {DialogService} from "../services/dialog.service";
 import {NoteTimeResponseMapper} from "./models/NoteTimeResponseMapper";
 import {LoadingService} from "../services/loading.service";
+import {EditableFieldTime} from "./models/EditableFieldTime";
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,9 @@ export class HomeComponent implements OnInit {
   selection = new SelectionModel<NoteTime>(true, []);
   oldValue: any;
   actualDates = new Date();
+  modalData: NoteTime;
+  modalInterval: string;
+  modalOpen = false;
 
   @ViewChild(MatTable) table!: MatTable<NoteTime>;
 
@@ -30,6 +34,8 @@ export class HomeComponent implements OnInit {
     private dialogService: DialogService,
     private loading: LoadingService
   ) {
+    this.modalData = this.noteTimeFactory.create(this.dataSource.length, this.actualDates);
+    this.modalInterval = "00:00";
   }
 
   ngOnInit(): void {
@@ -103,6 +109,40 @@ export class HomeComponent implements OnInit {
         this.dialogService.open('Erro', error.message);
       }
     );
+  }
+
+  openModalNewDateTime(){
+    this.modalData = this.noteTimeFactory.create(this.dataSource.length, this.actualDates);
+    this.openModal();
+  }
+
+  closeModal(){
+    this.modalOpen = false;
+  }
+
+  openModal(){
+    this.modalOpen = true;
+  }
+
+  saveNewDateTime(){
+    this.loading.show();
+    this.noteTimeService.saveNoteTime(
+      this.modalData,
+      ({data}: any, note: NoteTime) => {
+        note.id = data.id;
+        this.newTableRow(note);
+        this.loading.hide();
+        this.closeModal();
+      },
+      ({error}: any) => {
+        this.loading.hide();
+        this.dialogService.open('Erro', error.message);
+      });
+  }
+
+  updateDate(date: EditableFieldTime){
+    date.value = this.dateService.formatStringToDateTime(date.string);
+    this.calcIntervalModal();
   }
 
   newRow() {
@@ -290,5 +330,10 @@ export class HomeComponent implements OnInit {
 
   calcInterval(note: NoteTime) {
     note.interval = this.dateService.calcInterval(note.start_at.value, note.end_at.value);
+  }
+
+  calcIntervalModal(){
+    this.modalData.interval = this.dateService.calcInterval(this.modalData.start_at.value, this.modalData.end_at.value);
+    this.modalInterval = this.dateService.formatTime(this.modalData.interval);
   }
 }

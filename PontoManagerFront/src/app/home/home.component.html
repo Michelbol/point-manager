@@ -14,7 +14,7 @@
     mat-mini-fab
     color="primary"
     aria-label="Example icon button with a menu icon"
-    (click)="newRow()"
+    (click)="openModalNewDateTime()"
   >
     <mat-icon>add</mat-icon>
   </button>
@@ -163,4 +163,65 @@
     <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
 
   </table>
+</div>
+<div *ngIf="modalOpen" class="modal-overlay"></div>
+<div *ngIf="modalOpen" class="modal">
+  <div class="modal-header">
+    <h1>Adicionar Horário</h1>
+    <a class="btn-close" (click)="closeModal()">
+      <mat-icon aria-hidden="false" aria-label="Example home icon">close</mat-icon>
+    </a>
+  </div>
+  <div class="modal-content">
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Data</mat-label>
+        <input matInput [matDatepicker]="actualDate" [(ngModel)]="modalData.date.value" (dateInput)="null" >
+        <mat-datepicker-toggle matSuffix [for]="actualDate"></mat-datepicker-toggle>
+        <mat-datepicker #actualDate></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Id Vsts</mat-label>
+        <input type="number" matInput [(ngModel)]="modalData.id_vsts.value">
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Id Task</mat-label>
+        <input type="number" matInput [(ngModel)]="modalData.id_task.value">
+      </mat-form-field>
+    </div>
+
+    <div>
+      <label>Intervalo</label>
+      <ngx-timepicker-field class="border-none" [disabled]="true" [(ngModel)]="modalInterval" id="interval" [format]="24"></ngx-timepicker-field>
+    </div>
+
+    <div class="input">
+      <div>
+        <label for="startAt">Inicio</label>
+        <ngx-timepicker-field id="startAt" [format]="24" [(ngModel)]="modalData.start_at.string" (timeChanged)="updateDate(modalData.start_at)"></ngx-timepicker-field>
+      </div>
+    </div>
+
+    <div class="input">
+      <label for="endAt">Fim</label>
+      <ngx-timepicker-field id="endAt" [format]="24" [(ngModel)]="modalData.end_at.string" (timeChanged)="updateDate(modalData.end_at)"></ngx-timepicker-field>
+    </div>
+
+    <div class="input">
+      <mat-form-field appearance="fill" class="full">
+        <mat-label>Descrição</mat-label>
+        <input type="text" matInput [(ngModel)]="modalData.description.value">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button mat-raised-button color="basic" (click)="closeModal()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="saveNewDateTime()">Salvar</button>
+  </div>
 </div>

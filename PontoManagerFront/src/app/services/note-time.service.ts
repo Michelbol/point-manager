@@ -54,8 +54,8 @@ export class NoteTimeService {
       id: null,
       end_at: `${date} ${note.end_at.string}`,
       start_at: `${date} ${note.start_at.string}`,
-      id_vsts: note.id_vsts.value,
-      id_task: note.id_task.value,
+      id_vsts: Number(note.id_vsts.value),
+      id_task: Number(note.id_task.value),
       description: note.description.value,
     };
     return this

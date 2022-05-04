@@ -6,7 +6,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class ApiService {
 
-  private urlBase = 'http://localhost:81'
+  private urlBase = 'https://point-manager-api.herokuapp.com/'
 
   constructor(private http: HttpClient) { }
 
