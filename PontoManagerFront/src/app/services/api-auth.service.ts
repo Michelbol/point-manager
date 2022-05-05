@@ -7,7 +7,7 @@ import {NoteTimeRequestMapper} from "../home/models/NoteTimeRequestMapper";
 })
 export class ApiAuthService {
 
-  private urlBase = 'http://localhost:81'
+  private urlBase = 'https://point-manager-api.herokuapp.com/'
 
   constructor(private http: HttpClient) {
 

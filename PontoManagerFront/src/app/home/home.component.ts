@@ -113,8 +113,19 @@ export class HomeComponent implements OnInit {
 
   openModalNewDateTime(){
     this.modalData = this.noteTimeFactory.create(this.dataSource.length, this.actualDates);
+    let lastNoteTime = this.getLastNoteTime();
+    if(lastNoteTime != undefined){
+      this.modalData.start_at.string = lastNoteTime.end_at.string;
+      this.modalData.start_at.value = this.dateService.formatStringToDateTime(lastNoteTime.end_at.string);
+      this.modalData.end_at.string = lastNoteTime.end_at.string;
+      this.modalData.end_at.value = this.dateService.formatStringToDateTime(lastNoteTime.end_at.string);
+    }
     this.calcIntervalModal();
     this.openModal();
+  }
+
+  getLastNoteTime(){
+    return this.dataSource[this.dataSource.length-1];
   }
 
   closeModal(){
